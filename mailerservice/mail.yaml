@@ -1,0 +1,23 @@
+post:
+  host: "smtp.gmail.com"
+  tls:  "465"
+  tcp:  "587"
+
+boxes:
+  - key: "auth_service"
+    username: "walkmanmail19@gmail.com"
+    password:   "QUADRopheniamail12345"
+
+letters:
+  - key: "sign_up"
+    subject: "Вы зарегистрировались в Pet Finder"
+    template: "/templates/sign_up.html"
+  - key: "sign_in"
+    subject: "Вход в аккаунт в Pet Finder"
+    template: "/templates/sign_in.html"
+  - key: "reset_pass"
+    subject: "Сброс пароля Pet Finder"
+    template: "/templates/reset_pass.html"
+  - key: "reset_pass_2"
+    subject: "Сброс пароля Pet Finder"
+    template: "/templates/reset_pass_2.html"
