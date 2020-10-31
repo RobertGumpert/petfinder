@@ -11,6 +11,9 @@ import (
 )
 
 func createFilePath(fileName string, fileGroup groupFiles) (string, string) {
+	if strings.TrimSpace(root) == "" {
+		setRoot()
+	}
 	dir := ""
 	switch fileGroup {
 	case avatarGroupFiles:
@@ -80,7 +83,7 @@ func saveFile(reader io.Reader, fileGroup groupFiles, fileType typeFiles, viewMo
 	fileName := createFileName(fileGroup, viewModel.ID)
 	fileName = addFilenameExtension(fileName, fileType)
 	filePath, _ := createFilePath(fileName, fileGroup)
-	if fileExists(filePath){
+	if fileExists(filePath) {
 		if err := os.Remove(filePath); err != nil {
 			return err
 		}

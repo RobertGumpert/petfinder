@@ -34,8 +34,7 @@ func main() {
 }
 
 func readConfigs(files ...string) map[string]*viper.Viper {
-	_, file, _, _ := runtime.Caller(0)
-	root = path.Dir(file)
+	setRoot()
 	configs := make(map[string]*viper.Viper)
 	var read = func(name string) *viper.Viper {
 		vpr := viper.New()
@@ -49,4 +48,9 @@ func readConfigs(files ...string) map[string]*viper.Viper {
 		configs[file] = read(file)
 	}
 	return configs
+}
+
+func setRoot() {
+	_, file, _, _ := runtime.Caller(0)
+	root = path.Dir(file)
 }

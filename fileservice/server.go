@@ -103,7 +103,7 @@ func download(context *gin.Context, fileGroup groupFiles) error {
 	if err != nil {
 		return err
 	}
-	file, err := findFileByID(fileGroup, uint64(id))
+	file, err := findFileByID(fileGroup, uint64(id), false)
 	if err != nil {
 		return err
 	}
@@ -137,7 +137,7 @@ func downloadFile64(context *gin.Context, fileGroup groupFiles) (*ListFile64View
 		log.Println(runtimeinfo.Runtime(1), "ERROR=[", err, "]")
 		return nil, err
 	}
-	files := readFilesByID(fileGroup, viewModel)
+	files := findListFilesByID(fileGroup, viewModel.ID, false)
 	response := filesToBase64(files)
 	return response, nil
 }
