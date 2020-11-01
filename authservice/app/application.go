@@ -8,6 +8,7 @@ import (
 )
 
 var (
+	root string
 	application             *Application
 	applicationHttpApi      *apiHttpHandler
 	applicationHttpRequests *httpRequests
@@ -19,7 +20,8 @@ type Application struct {
 	userService            *service.User
 }
 
-func NewApp(configs map[string]*viper.Viper) *Application {
+func NewApp(configs map[string]*viper.Viper, rootDir string) *Application {
+	root = rootDir
 	application = new(Application)
 	application.configs = configs
 	application.userPostgresRepository = repository.NewUserGormRepository(postgresInit(true))

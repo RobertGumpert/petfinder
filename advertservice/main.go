@@ -1,19 +1,24 @@
 package main
 
 import (
-	"authservice/app"
-	"authservice/pckg/runtimeinfo"
+	"advertservice/app"
+	"advertservice/pckg/runtimeinfo"
 	"github.com/spf13/viper"
 	"log"
 	"path"
 	"runtime"
 )
 
-var root string
+func main() {
+	configs := readConfigs(
+		"app",
+	)
+	app.NewApp(configs)
+}
 
 func readConfigs(files ...string) map[string]*viper.Viper {
 	_, file, _, _ := runtime.Caller(0)
-	root = path.Dir(file)
+	root := path.Dir(file)
 	configs := make(map[string]*viper.Viper)
 	var read = func(name string) *viper.Viper {
 		vpr := viper.New()
@@ -27,12 +32,4 @@ func readConfigs(files ...string) map[string]*viper.Viper {
 		configs[file] = read(file)
 	}
 	return configs
-}
-
-func main() {
-	configs := readConfigs(
-		"app",
-		"event_receivers",
-	)
-	app.NewApp(configs, root)
 }

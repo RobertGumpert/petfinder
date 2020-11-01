@@ -2,14 +2,165 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3c068240-97f9-427c-adc3-c3626817d406" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../fileservice/app.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fileservice/main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fileservice/mapper.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fileservice/pckg/runtimeinfo/info.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fileservice/reader_writer.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fileservice/server.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../advertservice/.idea/advertservice.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../advertservice/app/application.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../advertservice/app/http_api.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../advertservice/app/http_requests.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../advertservice/app/init_database.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../advertservice/entity/advert.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../advertservice/entity/gorm_migration.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../advertservice/main.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../advertservice/repository/gorm_advert.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../advertservice/repository/repository_interface.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../advertservice/service/advert_service.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../advertservice/service/err.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../advertservice/service/mapper.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mailerservice/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../mailerservice/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/application.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/application.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/http_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/http_api.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/http_requests.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/http_requests.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/mapper.go" beforeDir="false" afterPath="$PROJECT_DIR$/service/mapper.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/user_service.go" beforeDir="false" afterPath="$PROJECT_DIR$/service/user_service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/../fileservice/server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/4343.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/578ea54ec34b91560535bbd0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/653377139.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/BGD.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/BGD_.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/BG_2.psd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/Bielinda_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/Bielinda_1.psd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/Cqr8Vi-9Mn0.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/IMac_Pro.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/Logotip-Sberbank-Rossii-thumb.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/ML.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/MTS_Logo_rus_r.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/RT_full_logo-CMYK_Vertical_rus.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/TEST_3v_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/TEST_3v_1.psd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/TEST_3v_2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/TEST_3v_3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/TEST_3v_4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/TEST_3v_5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/ava10_big.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/avatar_id_123.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/big data.psd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/c71cs_kmLBo-removebg-preview.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/c71cs_kmLBo.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/clipart-for-mac-os-x-free-download-4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/ecx4qGjrpa0.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/ecx4qGjrpa0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/ecx4qGjrpa0.psd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/error.psd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/iconfinder_edit-change-pencil_2931178.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/iconfinder_exit-delete-remove-close-x_2931151.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/iconfinder_mail-letter-offer_2931172.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/iconfinder_menu-lines-list_2931181.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/images.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/mobile.psd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/mobile_start.psd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/monitor.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/next.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/onedrive-computer-icons-cloud-storage-microsoft-file-hosting-service-clouds.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/status200.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/sticker_p-71380.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/t1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/t2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/t3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/t4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/t5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/test.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/test_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/test_2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/test_2v_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/test_v_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/triagle.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/triagle_11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/triagle_12.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/triagle_13.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/triagle_14.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/ulstu_land.rar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/w450h4001385925290Cloud.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/Без имени-1.psd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/Без названия (1).png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/Без названия.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/Логотип_университета.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/Наши_проекты_2.psd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/Наши_проекты_2_10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/Наши_проекты_2_11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/Наши_проекты_2_20.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/Наши_проекты_2_21.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/О нас.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/О нас.psd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/О нас_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/О нас_2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/О нас_3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/О нас_4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/Осень скидки.psd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/Первый.psd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/Флаг_Кореи..png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/Шапка.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/Шапка.psd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/Шапка_big.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/баба.psd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/баба2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/баба3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/баннер.psd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/баннер_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/баннер_2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/бренд.psd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/бренд.wbm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/бренд1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/бренд2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/бренд3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/бренд4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/бренд5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/бренд6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/бренд_11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/главный.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/главный_.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/иконки.psd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/история.psd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/история_ГЛАЗА.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/история_маска.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/история_очищ.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/история_пилинг.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/история_тест.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/история_тест2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/история_тоник.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/история_увлаж.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/история_умывание.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/итог.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/итог.psd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/как мы работаем.psd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/наши проекты.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/наши проекты.psd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/наши проекты_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/наши проекты_2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/наши проекты_3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/наши_проекты_3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/наши_проекты_3.psd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/наши_проекты_3_сюжет_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/наши_проекты_3_сюжет_2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/наши_проекты_3_сюжет_3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/ноутт.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/фон.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/футболка.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/футболка_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/цвета.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/что мы умеем.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/что мы умеем.psd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/экран.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/экшн.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/экшн.psd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/экшн_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/экшн_2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/экшн_error_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/экшн_error_2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/экшн_error_3.png" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -27,11 +178,12 @@
   <component name="ProjectId" id="1jWOeLlWep6nG7wHFL4maZQo7Cc" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="go.import.settings.migrated" value="true" />
     <property name="go.sdk.automatically.set" value="true" />
     <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../mailerservice" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../fileservice" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -74,5 +226,21 @@
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
     <proxy>direct</proxy>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/service/mapper.go</url>
+          <line>93</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/app/http_api.go</url>
+          <line>373</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

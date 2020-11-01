@@ -70,12 +70,11 @@ func (u *User) Authorized(inputViewModel *AuthorizationUserViewModel, db reposit
 	}
 	if strings.TrimSpace(userEntity.RefreshToken) != "" {
 		if _, err := u.tokenIsExpire(userEntity.RefreshToken); err != nil {
-			go log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
+			if err := u.updateRefreshToken(userEntity, nil, db, ctx); err != nil {
+				go log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
+				return access, refresh, outputViewModel, ErrorBadDataOperation
+			}
 			return access, refresh, outputViewModel, ErrorNonValidRefreshToken
-		}
-		if err := u.updateRefreshToken(userEntity, nil, db, ctx); err != nil {
-			go log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
-			return access, refresh, outputViewModel, ErrorBadDataOperation
 		}
 		return access, refresh, outputViewModel, ErrorNonValidRefreshToken
 	}
@@ -198,6 +197,19 @@ func (u *User) Update(inputViewModel *UpdateUserViewModel, db repository.UserRep
 		return nil, ErrorNonExistUser
 	}
 	return new(UserViewModel).Mapper(updateUserEntity), nil
+}
+
+func (u *User) UpdateAvatar(inputViewModel *UpdateAvatarViewModel, db repository.UserRepository, ctx context.Context) error {
+	if err := inputViewModel.Validator(); err != nil {
+		return err
+	}
+	id, mp := inputViewModel.Mapper()
+	err := db.MapUpdate(id, mp, ctx)
+	if err != nil {
+		go log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
+		return ErrorBadDataOperation
+	}
+	return nil
 }
 
 func (u *User) Get(inputViewModel *FindUserViewModel, db repository.UserRepository, ctx context.Context) (*UserListViewModel, error) {

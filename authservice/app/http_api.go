@@ -1,12 +1,16 @@
 package app
 
 import (
+	"authservice/pckg/runtimeinfo"
 	"authservice/service"
 	"errors"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
+	"net/http/httputil"
+	"net/url"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -42,6 +46,7 @@ func (a *apiHttpHandler) getServer() func() {
 		update := api.Group("/update", a.middlewareAccessToken)
 		{
 			update.POST("", a.update)
+			update.POST("/avatar", a.updateAvatar)
 		}
 
 		getting := api.Group("/get")
@@ -92,8 +97,8 @@ func (a *apiHttpHandler) middlewareAccessToken(ctx *gin.Context) {
 }
 
 func (a *apiHttpHandler) register(ctx *gin.Context) {
-	json := new(service.RegisterUserViewModel)
-	if err := ctx.BindJSON(json); err != nil {
+	viewModel := new(service.RegisterUserViewModel)
+	if err := ctx.BindJSON(viewModel); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, struct {
 			Error string `json:"error"`
 		}{
@@ -102,7 +107,7 @@ func (a *apiHttpHandler) register(ctx *gin.Context) {
 		return
 	}
 	response, err := application.userService.Register(
-		json,
+		viewModel,
 		application.userPostgresRepository,
 		nil,
 	)
@@ -124,8 +129,8 @@ func (a *apiHttpHandler) register(ctx *gin.Context) {
 }
 
 func (a *apiHttpHandler) authorized(ctx *gin.Context) {
-	json := new(service.AuthorizationUserViewModel)
-	if err := ctx.BindJSON(json); err != nil {
+	viewModel := new(service.AuthorizationUserViewModel)
+	if err := ctx.BindJSON(viewModel); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, struct {
 			Error string `json:"error"`
 		}{
@@ -134,7 +139,7 @@ func (a *apiHttpHandler) authorized(ctx *gin.Context) {
 		return
 	}
 	access, _, response, err := application.userService.Authorized(
-		json,
+		viewModel,
 		application.userPostgresRepository,
 		nil,
 	)
@@ -163,10 +168,10 @@ func (a *apiHttpHandler) authorized(ctx *gin.Context) {
 
 func (a *apiHttpHandler) isAuthorized(ctx *gin.Context) {
 	token := ctx.MustGet("authorization").(string)
-	json := new(service.IsAuthorizedViewModel)
-	json.Access = token
+	viewModel := new(service.IsAuthorizedViewModel)
+	viewModel.Access = token
 	response, err := application.userService.IsAuthorized(
-		json,
+		viewModel,
 		application.userPostgresRepository,
 		nil,
 	)
@@ -183,9 +188,9 @@ func (a *apiHttpHandler) isAuthorized(ctx *gin.Context) {
 
 func (a *apiHttpHandler) updateAccessToken(ctx *gin.Context) {
 	token := ctx.MustGet("authorization").(string)
-	json := new(service.NewAccessTokenViewModel)
-	json.Access = token
-	if err := ctx.BindJSON(json); err != nil {
+	viewModel := new(service.NewAccessTokenViewModel)
+	viewModel.Access = token
+	if err := ctx.BindJSON(viewModel); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, struct {
 			Error string `json:"error"`
 		}{
@@ -194,7 +199,7 @@ func (a *apiHttpHandler) updateAccessToken(ctx *gin.Context) {
 		return
 	}
 	access, response, err := application.userService.UpdateAccessToken(
-		json,
+		viewModel,
 		application.userPostgresRepository,
 		nil,
 	)
@@ -216,8 +221,8 @@ func (a *apiHttpHandler) updateAccessToken(ctx *gin.Context) {
 }
 
 func (a *apiHttpHandler) getResetPasswordToken(ctx *gin.Context) {
-	json := new(service.ResetPasswordViewModel)
-	if err := ctx.BindJSON(json); err != nil {
+	viewModel := new(service.ResetPasswordViewModel)
+	if err := ctx.BindJSON(viewModel); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, struct {
 			Error string `json:"error"`
 		}{
@@ -226,7 +231,7 @@ func (a *apiHttpHandler) getResetPasswordToken(ctx *gin.Context) {
 		return
 	}
 	token, err := application.userService.GetResetPasswordToken(
-		json,
+		viewModel,
 		application.userPostgresRepository,
 		nil,
 	)
@@ -238,13 +243,13 @@ func (a *apiHttpHandler) getResetPasswordToken(ctx *gin.Context) {
 		})
 		return
 	}
-	go applicationHttpRequests.mailerResetPasswordToken(token, json.Email)
+	go applicationHttpRequests.mailerResetPasswordToken(token, viewModel.Email)
 	ctx.AbortWithStatus(http.StatusOK)
 }
 
 func (a *apiHttpHandler) resetPassword(ctx *gin.Context) {
-	json := new(service.ResetPasswordViewModel)
-	if err := ctx.BindJSON(json); err != nil {
+	viewModel := new(service.ResetPasswordViewModel)
+	if err := ctx.BindJSON(viewModel); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, struct {
 			Error string `json:"error"`
 		}{
@@ -253,7 +258,7 @@ func (a *apiHttpHandler) resetPassword(ctx *gin.Context) {
 		return
 	}
 	access, _, err := application.userService.ResetPassword(
-		json,
+		viewModel,
 		application.userPostgresRepository,
 		nil,
 	)
@@ -265,7 +270,7 @@ func (a *apiHttpHandler) resetPassword(ctx *gin.Context) {
 		})
 		return
 	}
-	go applicationHttpRequests.mailerResetPassword(json.Email)
+	go applicationHttpRequests.mailerResetPassword(viewModel.Email)
 	ctx.AbortWithStatusJSON(http.StatusOK, &struct {
 		Token string `json:"token"`
 	}{
@@ -288,8 +293,8 @@ func (a *apiHttpHandler) update(ctx *gin.Context) {
 		})
 		return
 	}
-	json := new(service.UpdateUserViewModel)
-	if err := ctx.BindJSON(json); err != nil {
+	viewModel := new(service.UpdateUserViewModel)
+	if err := ctx.BindJSON(viewModel); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, struct {
 			Error string `json:"error"`
 		}{
@@ -298,7 +303,7 @@ func (a *apiHttpHandler) update(ctx *gin.Context) {
 		return
 	}
 	response, err := application.userService.Update(
-		json,
+		viewModel,
 		application.userPostgresRepository,
 		nil,
 	)
@@ -316,9 +321,75 @@ func (a *apiHttpHandler) update(ctx *gin.Context) {
 	ctx.AbortWithStatusJSON(http.StatusOK, response)
 }
 
+func (a *apiHttpHandler) updateAvatarProxy(ctx *gin.Context) {
+	token := ctx.MustGet("authorization").(string)
+	user, err := application.userService.IsAuthorized(
+		&service.IsAuthorizedViewModel{Access: token},
+		application.userPostgresRepository,
+		nil,
+	)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, struct {
+			Error string `json:"error"`
+		}{
+			Error: err.Error(),
+		})
+		return
+	}
+	u := &url.URL{
+		Scheme: "http",
+		Host:   application.configs["app"].GetString("file_service"),
+		Path:   "/upload/avatar/id/" + strconv.Itoa(int(user.UserID)),
+	}
+	proxy := httputil.NewSingleHostReverseProxy(u)
+	proxy.Director = func(req *http.Request) {
+		req.Header = ctx.Request.Header
+		req.PostForm = ctx.Request.PostForm
+		req.Host = u.Host
+		req.URL.Scheme = u.Scheme
+		req.URL.Host = u.Host
+		req.URL.Path = u.Path
+	}
+	proxy.ServeHTTP(ctx.Writer, ctx.Request)
+}
+
+func (a *apiHttpHandler) updateAvatar(ctx *gin.Context) {
+	token := ctx.MustGet("authorization").(string)
+	user, err := application.userService.IsAuthorized(
+		&service.IsAuthorizedViewModel{Access: token},
+		application.userPostgresRepository,
+		nil,
+	)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, struct {
+			Error string `json:"error"`
+		}{
+			Error: err.Error(),
+		})
+		return
+	}
+	go func(context *gin.Context, id uint64, app *Application, req *httpRequests) {
+		_, imageUrl, err := req.saveAvatar(context, id)
+		if err == nil {
+			err := app.userService.UpdateAvatar(&service.UpdateAvatarViewModel{
+				UserID:    id,
+				AvatarUrl: imageUrl,
+			}, app.userPostgresRepository, nil)
+			if err != nil {
+				log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
+				return
+			}
+		} else {
+			log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
+			return
+		}
+	}(ctx, user.UserID, application, applicationHttpRequests)
+	ctx.AbortWithStatus(http.StatusOK)
+}
+
 func (a *apiHttpHandler) get(ctx *gin.Context) {
-	json := new(service.FindUserViewModel)
-	if err := ctx.BindJSON(json); err != nil {
+	viewModel := new(service.FindUserViewModel)
+	if err := ctx.BindJSON(viewModel); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, struct {
 			Error string `json:"error"`
 		}{
@@ -327,7 +398,7 @@ func (a *apiHttpHandler) get(ctx *gin.Context) {
 		return
 	}
 	response, err := application.userService.Get(
-		json,
+		viewModel,
 		application.userPostgresRepository,
 		nil,
 	)

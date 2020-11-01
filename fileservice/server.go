@@ -29,11 +29,29 @@ func serverStart() {
 				context.AbortWithStatusJSON(http.StatusOK, resp)
 				return
 			})
+			avatarRouter.POST("/id/:id", func(context *gin.Context) {
+				resp, err := uploadFileFormData(context, avatarGroupFiles)
+				if err != nil {
+					context.AbortWithStatus(http.StatusBadRequest)
+					return
+				}
+				context.AbortWithStatusJSON(http.StatusOK, resp)
+				return
+			})
 		}
 		advertRouter := uploadRouter.Group("/advert")
 		{
 			advertRouter.POST("", func(context *gin.Context) {
 				resp, err := uploadFileFormData(context, advertGroupFiles)
+				if err != nil {
+					context.AbortWithStatus(http.StatusBadRequest)
+					return
+				}
+				context.AbortWithStatusJSON(http.StatusOK, resp)
+				return
+			})
+			advertRouter.POST("/id/:id", func(context *gin.Context) {
+				resp, err := uploadFileFormData(context, avatarGroupFiles)
 				if err != nil {
 					context.AbortWithStatus(http.StatusBadRequest)
 					return
@@ -146,10 +164,22 @@ func uploadFileFormData(context *gin.Context, fileGroup groupFiles) (*URLViewMod
 	context.Request.Body = http.MaxBytesReader(context.Writer, context.Request.Body, 2<<20)
 	viewModel := new(UploadViewModel)
 	jsonForm := context.PostForm("json")
-	err := json.Unmarshal([]byte(jsonForm), viewModel)
-	if err != nil {
-		log.Println(runtimeinfo.Runtime(1), "ERROR=[", err, "]")
-		return nil, err
+	if jsonForm != "" {
+		err := json.Unmarshal([]byte(jsonForm), viewModel)
+		if err != nil {
+			log.Println(runtimeinfo.Runtime(1), "ERROR=[", err, "]")
+			return nil, err
+		}
+	} else {
+		id := context.Param("id")
+		if id == "" {
+			return nil, errors.New("Non valid params. ")
+		}
+		convertId, err := strconv.Atoi(id)
+		if id == "" {
+			return nil, err
+		}
+		viewModel.ID = uint64(convertId)
 	}
 	header, err := context.FormFile("file")
 	if err != nil {

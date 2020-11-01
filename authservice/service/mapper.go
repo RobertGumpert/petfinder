@@ -87,6 +87,7 @@ type UpdateUserViewModel struct {
 	Telephone string `json:"telephone"`
 	Email     string `json:"email"`
 	Name      string `json:"name"`
+	AvatarUrl string `json:"avatar_url"`
 }
 
 func (m *UpdateUserViewModel) Validator() error {
@@ -99,10 +100,10 @@ func (m *UpdateUserViewModel) Validator() error {
 	if name == "" && m.Telephone != "" && m.Email != "" && m.UserID == 0 {
 		return ErrorNonValidData
 	}
-	if m.Email != "" || !regularexp.EmailValid(m.Email) {
+	if m.Email != "" && !regularexp.EmailValid(m.Email) {
 		return ErrorNonValidData
 	}
-	if m.Telephone != "" || !regularexp.TelephoneValid(m.Telephone) {
+	if m.Telephone != "" && !regularexp.TelephoneValid(m.Telephone) {
 		return ErrorNonValidData
 	}
 	return nil
@@ -114,6 +115,30 @@ func (m *UpdateUserViewModel) Mapper() *entity.User {
 		Telephone: m.Telephone,
 		Email:     m.Email,
 		Name:      m.Name,
+	}
+}
+
+//---------------------------------------------------
+
+type UpdateAvatarViewModel struct {
+	UserID    uint64 `json:"user_id"`
+	AvatarUrl string `json:"avatar_url"`
+}
+
+func (m *UpdateAvatarViewModel) Validator() error {
+	if m.UserID == 0 {
+		return ErrorNonValidData
+	}
+	m.AvatarUrl = strings.TrimSpace(m.AvatarUrl)
+	if m.AvatarUrl == "" {
+		return ErrorNonValidData
+	}
+	return nil
+}
+
+func (m *UpdateAvatarViewModel) Mapper() (uint64, map[string]interface{}) {
+	return m.UserID, map[string]interface{}{
+		"avatar_url": m.AvatarUrl,
 	}
 }
 
