@@ -1,8 +1,10 @@
 package app
 
 import (
+	"advertservice/entity"
 	"advertservice/pckg/storage"
 	"gorm.io/gorm"
+	"log"
 )
 
 func postgresInit(migrate bool) *gorm.DB {

@@ -1,8 +1,8 @@
 package app
 
 import (
+	"authservice/mapper"
 	"authservice/pckg/runtimeinfo"
-	"authservice/service"
 	"errors"
 	"github.com/gin-gonic/gin"
 	"log"
@@ -97,12 +97,12 @@ func (a *apiHttpHandler) middlewareAccessToken(ctx *gin.Context) {
 }
 
 func (a *apiHttpHandler) register(ctx *gin.Context) {
-	viewModel := new(service.RegisterUserViewModel)
+	viewModel := new(mapper.RegisterUserViewModel)
 	if err := ctx.BindJSON(viewModel); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, struct {
 			Error string `json:"error"`
 		}{
-			Error: service.ErrorNonValidData.Error(),
+			Error: mapper.ErrorNonValidData.Error(),
 		})
 		return
 	}
@@ -129,12 +129,12 @@ func (a *apiHttpHandler) register(ctx *gin.Context) {
 }
 
 func (a *apiHttpHandler) authorized(ctx *gin.Context) {
-	viewModel := new(service.AuthorizationUserViewModel)
+	viewModel := new(mapper.AuthorizationUserViewModel)
 	if err := ctx.BindJSON(viewModel); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, struct {
 			Error string `json:"error"`
 		}{
-			Error: service.ErrorNonValidData.Error(),
+			Error: mapper.ErrorNonValidData.Error(),
 		})
 		return
 	}
@@ -158,8 +158,8 @@ func (a *apiHttpHandler) authorized(ctx *gin.Context) {
 		false,
 	)
 	ctx.AbortWithStatusJSON(http.StatusOK, &struct {
-		Token string                 `json:"token"`
-		User  *service.UserViewModel `json:"user"`
+		Token string                `json:"token"`
+		User  *mapper.UserViewModel `json:"user"`
 	}{
 		Token: access,
 		User:  response,
@@ -168,7 +168,7 @@ func (a *apiHttpHandler) authorized(ctx *gin.Context) {
 
 func (a *apiHttpHandler) isAuthorized(ctx *gin.Context) {
 	token := ctx.MustGet("authorization").(string)
-	viewModel := new(service.IsAuthorizedViewModel)
+	viewModel := new(mapper.IsAuthorizedViewModel)
 	viewModel.Access = token
 	response, err := application.userService.IsAuthorized(
 		viewModel,
@@ -188,13 +188,13 @@ func (a *apiHttpHandler) isAuthorized(ctx *gin.Context) {
 
 func (a *apiHttpHandler) updateAccessToken(ctx *gin.Context) {
 	token := ctx.MustGet("authorization").(string)
-	viewModel := new(service.NewAccessTokenViewModel)
+	viewModel := new(mapper.NewAccessTokenViewModel)
 	viewModel.Access = token
 	if err := ctx.BindJSON(viewModel); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, struct {
 			Error string `json:"error"`
 		}{
-			Error: service.ErrorNonValidData.Error(),
+			Error: mapper.ErrorNonValidData.Error(),
 		})
 		return
 	}
@@ -212,8 +212,8 @@ func (a *apiHttpHandler) updateAccessToken(ctx *gin.Context) {
 		return
 	}
 	ctx.AbortWithStatusJSON(http.StatusOK, &struct {
-		Token string                 `json:"token"`
-		User  *service.UserViewModel `json:"user"`
+		Token string                `json:"token"`
+		User  *mapper.UserViewModel `json:"user"`
 	}{
 		Token: access,
 		User:  response,
@@ -221,12 +221,12 @@ func (a *apiHttpHandler) updateAccessToken(ctx *gin.Context) {
 }
 
 func (a *apiHttpHandler) getResetPasswordToken(ctx *gin.Context) {
-	viewModel := new(service.ResetPasswordViewModel)
+	viewModel := new(mapper.ResetPasswordViewModel)
 	if err := ctx.BindJSON(viewModel); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, struct {
 			Error string `json:"error"`
 		}{
-			Error: service.ErrorNonValidData.Error(),
+			Error: mapper.ErrorNonValidData.Error(),
 		})
 		return
 	}
@@ -248,12 +248,12 @@ func (a *apiHttpHandler) getResetPasswordToken(ctx *gin.Context) {
 }
 
 func (a *apiHttpHandler) resetPassword(ctx *gin.Context) {
-	viewModel := new(service.ResetPasswordViewModel)
+	viewModel := new(mapper.ResetPasswordViewModel)
 	if err := ctx.BindJSON(viewModel); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, struct {
 			Error string `json:"error"`
 		}{
-			Error: service.ErrorNonValidData.Error(),
+			Error: mapper.ErrorNonValidData.Error(),
 		})
 		return
 	}
@@ -281,7 +281,7 @@ func (a *apiHttpHandler) resetPassword(ctx *gin.Context) {
 func (a *apiHttpHandler) update(ctx *gin.Context) {
 	token := ctx.MustGet("authorization").(string)
 	user, err := application.userService.IsAuthorized(
-		&service.IsAuthorizedViewModel{Access: token},
+		&mapper.IsAuthorizedViewModel{Access: token},
 		application.userPostgresRepository,
 		nil,
 	)
@@ -293,12 +293,12 @@ func (a *apiHttpHandler) update(ctx *gin.Context) {
 		})
 		return
 	}
-	viewModel := new(service.UpdateUserViewModel)
+	viewModel := new(mapper.UpdateUserViewModel)
 	if err := ctx.BindJSON(viewModel); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, struct {
 			Error string `json:"error"`
 		}{
-			Error: service.ErrorNonValidData.Error(),
+			Error: mapper.ErrorNonValidData.Error(),
 		})
 		return
 	}
@@ -324,7 +324,7 @@ func (a *apiHttpHandler) update(ctx *gin.Context) {
 func (a *apiHttpHandler) updateAvatarProxy(ctx *gin.Context) {
 	token := ctx.MustGet("authorization").(string)
 	user, err := application.userService.IsAuthorized(
-		&service.IsAuthorizedViewModel{Access: token},
+		&mapper.IsAuthorizedViewModel{Access: token},
 		application.userPostgresRepository,
 		nil,
 	)
@@ -356,7 +356,7 @@ func (a *apiHttpHandler) updateAvatarProxy(ctx *gin.Context) {
 func (a *apiHttpHandler) updateAvatar(ctx *gin.Context) {
 	token := ctx.MustGet("authorization").(string)
 	user, err := application.userService.IsAuthorized(
-		&service.IsAuthorizedViewModel{Access: token},
+		&mapper.IsAuthorizedViewModel{Access: token},
 		application.userPostgresRepository,
 		nil,
 	)
@@ -371,7 +371,7 @@ func (a *apiHttpHandler) updateAvatar(ctx *gin.Context) {
 	go func(context *gin.Context, id uint64, app *Application, req *httpRequests) {
 		_, imageUrl, err := req.saveAvatar(context, id)
 		if err == nil {
-			err := app.userService.UpdateAvatar(&service.UpdateAvatarViewModel{
+			err := app.userService.UpdateAvatar(&mapper.UpdateAvatarViewModel{
 				UserID:    id,
 				AvatarUrl: imageUrl,
 			}, app.userPostgresRepository, nil)
@@ -388,12 +388,12 @@ func (a *apiHttpHandler) updateAvatar(ctx *gin.Context) {
 }
 
 func (a *apiHttpHandler) get(ctx *gin.Context) {
-	viewModel := new(service.FindUserViewModel)
+	viewModel := new(mapper.FindUserViewModel)
 	if err := ctx.BindJSON(viewModel); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, struct {
 			Error string `json:"error"`
 		}{
-			Error: service.ErrorNonValidData.Error(),
+			Error: mapper.ErrorNonValidData.Error(),
 		})
 		return
 	}

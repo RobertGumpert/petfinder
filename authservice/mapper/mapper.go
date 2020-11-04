@@ -1,4 +1,4 @@
-package service
+package mapper
 
 import (
 	"authservice/entity"
@@ -62,10 +62,10 @@ func (m *FindUserViewModel) Validator() error {
 	if name == "" && m.Email != "" && m.Telephone != "" && m.UserID == 0 {
 		return ErrorNonValidData
 	}
-	if m.Email != "" || !regularexp.EmailValid(m.Email) {
+	if m.Email != "" && !regularexp.EmailValid(m.Email) {
 		return ErrorNonValidData
 	}
-	if m.Telephone != "" || !regularexp.TelephoneValid(m.Telephone) {
+	if m.Telephone != "" && !regularexp.TelephoneValid(m.Telephone) {
 		return ErrorNonValidData
 	}
 	return nil

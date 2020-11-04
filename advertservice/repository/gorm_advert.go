@@ -6,15 +6,19 @@ import (
 	"gorm.io/gorm"
 )
 
-type AdvertGormRepository struct {
+type GormAdvertRepository struct {
 	*gorm.DB
 }
 
-func NewAdvertGormRepository(DB *gorm.DB) *AdvertGormRepository {
-	return &AdvertGormRepository{DB: DB}
+func NewGormAdvertRepository(DB *gorm.DB) *GormAdvertRepository {
+	return &GormAdvertRepository{DB: DB}
 }
 
-func (r *AdvertGormRepository) Create(model *entity.Advert, ctx context.Context) error {
+func (r *GormAdvertRepository) GetOrm() interface{} {
+	return r.DB
+}
+
+func (r *GormAdvertRepository) Create(model *entity.Advert, ctx context.Context) error {
 	tx := r.DB.Begin()
 	defer func() {
 		if r := recover(); r != nil {
@@ -29,7 +33,7 @@ func (r *AdvertGormRepository) Create(model *entity.Advert, ctx context.Context)
 }
 
 
-func (r *AdvertGormRepository) EntityUpdate(model *entity.Advert, ctx context.Context) error {
+func (r *GormAdvertRepository) EntityUpdate(model *entity.Advert, ctx context.Context) error {
 	tx := r.DB.Begin()
 	defer func() {
 		if r := recover(); r != nil {
@@ -43,7 +47,7 @@ func (r *AdvertGormRepository) EntityUpdate(model *entity.Advert, ctx context.Co
 	return tx.Commit().Error
 }
 
-func (r *AdvertGormRepository) MapUpdate(id uint64, fields map[string]interface{}, ctx context.Context) error {
+func (r *GormAdvertRepository) MapUpdate(id uint64, fields map[string]interface{}, ctx context.Context) error {
 	tx := r.DB.Begin()
 	defer func() {
 		if r := recover(); r != nil {
@@ -58,7 +62,7 @@ func (r *AdvertGormRepository) MapUpdate(id uint64, fields map[string]interface{
 }
 
 //
-func (r *AdvertGormRepository) GetByID(id uint64, ctx context.Context) (*entity.Advert, error) {
+func (r *GormAdvertRepository) GetByID(id uint64, ctx context.Context) (*entity.Advert, error) {
 	var (
 		result entity.Advert
 	)
@@ -69,7 +73,7 @@ func (r *AdvertGormRepository) GetByID(id uint64, ctx context.Context) (*entity.
 	return &result, nil
 }
 
-func (r *AdvertGormRepository) EntityGet(model *entity.Advert, ctx context.Context) (*entity.Advert, error) {
+func (r *GormAdvertRepository) EntityGet(model *entity.Advert, ctx context.Context) (*entity.Advert, error) {
 	var (
 		result entity.Advert
 	)
@@ -80,7 +84,7 @@ func (r *AdvertGormRepository) EntityGet(model *entity.Advert, ctx context.Conte
 	return &result, nil
 }
 
-func (r *AdvertGormRepository) MapGet(fields map[string]interface{}, ctx context.Context) (*entity.Advert, error) {
+func (r *GormAdvertRepository) MapGet(fields map[string]interface{}, ctx context.Context) (*entity.Advert, error) {
 	var (
 		result entity.Advert
 	)
@@ -92,7 +96,7 @@ func (r *AdvertGormRepository) MapGet(fields map[string]interface{}, ctx context
 }
 
 //
-func (r *AdvertGormRepository) ListByID(id []uint64, ctx context.Context) ([]entity.Advert, error) {
+func (r *GormAdvertRepository) ListByID(id []uint64, ctx context.Context) ([]entity.Advert, error) {
 	var (
 		result []entity.Advert
 	)
@@ -103,7 +107,7 @@ func (r *AdvertGormRepository) ListByID(id []uint64, ctx context.Context) ([]ent
 	return result, nil
 }
 
-func (r *AdvertGormRepository) EntityList(model *entity.Advert, ctx context.Context) ([]entity.Advert, error) {
+func (r *GormAdvertRepository) EntityList(model *entity.Advert, ctx context.Context) ([]entity.Advert, error) {
 	var (
 		result []entity.Advert
 	)
@@ -114,7 +118,7 @@ func (r *AdvertGormRepository) EntityList(model *entity.Advert, ctx context.Cont
 	return result, nil
 }
 
-func (r *AdvertGormRepository) MapList(fields map[string]interface{}, ctx context.Context) ([]entity.Advert, error) {
+func (r *GormAdvertRepository) MapList(fields map[string]interface{}, ctx context.Context) ([]entity.Advert, error) {
 	var (
 		result []entity.Advert
 	)
@@ -123,4 +127,18 @@ func (r *AdvertGormRepository) MapList(fields map[string]interface{}, ctx contex
 		return nil, err
 	}
 	return result, nil
+}
+
+func (r *GormAdvertRepository) MapUpdateInID(ids []uint64, fields map[string]interface{}, ctx context.Context) error {
+	tx := r.DB.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+	if err := tx.Model(&entity.Advert{}).Where("ad_id IN ? ", ids).Updates(fields).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+	return tx.Commit().Error
 }

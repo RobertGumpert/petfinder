@@ -19,8 +19,8 @@ type Advert struct {
 	AnimalBreed  string     `gorm:"size:255;not null;"`
 	GeoLatitude  float64    `gorm:"size:10;not null;"`
 	GeoLongitude float64    `gorm:"size:10;not null;"`
-	CommentText  string     `gorm:"size:255;"`
-	ImageUrl     string     `gorm:"size:5000;not null;"`
+	CommentText  string     `gorm:"size:255;not null;"`
+	ImageUrl     string     `gorm:"size:5000;"`
 	//
 	// gorm model
 	//

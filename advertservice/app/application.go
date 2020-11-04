@@ -19,7 +19,7 @@ type Application struct {
 func NewApp(configs map[string]*viper.Viper) *Application {
 	application = new(Application)
 	application.configs = configs
-	application.advertPostgresRepository = repository.NewAdvertGormRepository(postgresInit(true))
+	application.advertPostgresRepository = repository.NewGormAdvertRepository(postgresInit(true))
 	//
 	applicationHttpApi = newApiHttpHandler()
 	httpServerRun := applicationHttpApi.getServer()
