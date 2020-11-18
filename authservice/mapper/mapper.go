@@ -33,6 +33,7 @@ type UserViewModel struct {
 	Telephone string `json:"telephone"`
 	Email     string `json:"email"`
 	Name      string `json:"name"`
+	AvatarUrl string `json:"avatar_url"`
 }
 
 func (m *UserViewModel) Mapper(user *entity.User) *UserViewModel {
@@ -40,6 +41,7 @@ func (m *UserViewModel) Mapper(user *entity.User) *UserViewModel {
 	m.Name = user.Name
 	m.Telephone = user.Telephone
 	m.Email = user.Email
+	m.AvatarUrl = user.AvatarURL
 	return m
 }
 

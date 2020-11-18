@@ -368,7 +368,7 @@ func (a *apiHttpHandler) updateAvatar(ctx *gin.Context) {
 		})
 		return
 	}
-	go func(context *gin.Context, id uint64, app *Application, req *httpRequests) {
+	func(context *gin.Context, id uint64, app *Application, req *httpRequests) {
 		_, imageUrl, err := req.saveAvatar(context, id)
 		if err == nil {
 			err := app.userService.UpdateAvatar(&mapper.UpdateAvatarViewModel{

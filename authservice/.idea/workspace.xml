@@ -2,25 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3c068240-97f9-427c-adc3-c3626817d406" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../advertservice/entity/test/gorm_migration_test.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../advertservice/mapper/advert_types.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../advertservice/mapper/err.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../advertservice/mapper/mapper.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../advertservice/repository/gorm_square_search_model.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/service/test/user_service_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../advertservice/app/application.go" beforeDir="false" afterPath="$PROJECT_DIR$/../advertservice/app/application.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../advertservice/app/init_database.go" beforeDir="false" afterPath="$PROJECT_DIR$/../advertservice/app/init_database.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../advertservice/entity/advert.go" beforeDir="false" afterPath="$PROJECT_DIR$/../advertservice/entity/advert.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../advertservice/repository/gorm_advert.go" beforeDir="false" afterPath="$PROJECT_DIR$/../advertservice/repository/gorm_advert.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../advertservice/repository/repository_interface.go" beforeDir="false" afterPath="$PROJECT_DIR$/../advertservice/repository/repository_interface.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../advertservice/service/advert_service.go" beforeDir="false" afterPath="$PROJECT_DIR$/../advertservice/service/advert_service.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../advertservice/service/err.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../advertservice/service/mapper.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../advertservice/app.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../advertservice/app.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/http_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/http_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/err.go" beforeDir="false" afterPath="$PROJECT_DIR$/service/mapper/err.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/mapper.go" beforeDir="false" afterPath="$PROJECT_DIR$/service/mapper/mapper.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/user_service.go" beforeDir="false" afterPath="$PROJECT_DIR$/service/user_service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/http_requests.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/http_requests.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mapper/mapper.go" beforeDir="false" afterPath="$PROJECT_DIR$/mapper/mapper.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/storage/avatar/avatar_id_37.jpeg" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -55,6 +43,7 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\PetFinderRepos\petfinder\authservice" />
       <recent name="C:\PetFinderRepos\petfinder\authservice\service\mapper" />
     </key>
   </component>
@@ -132,14 +121,24 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/service/mapper/mapper.go</url>
-          <line>93</line>
+          <url>file://$PROJECT_DIR$/mapper/mapper.go</url>
+          <line>95</line>
           <option name="timeStamp" value="7" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/service/test/user_service_test.go</url>
           <line>77</line>
           <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/app/http_api.go</url>
+          <line>371</line>
+          <option name="timeStamp" value="12" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/app/http_api.go</url>
+          <line>223</line>
+          <option name="timeStamp" value="16" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -60,15 +60,18 @@ func (h *httpRequests) saveAvatar(context *gin.Context, id uint64) (*http.Respon
 		ID: id,
 	})
 	if err != nil {
+		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 		return nil, "", err
 	}
 	file, fileHeader, err := context.Request.FormFile("file")
 	if err != nil {
+		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 		return nil, "", err
 	}
 	var requestBuffer bytes.Buffer
 	fileBuffer, err := ioutil.ReadAll(file)
 	if err != nil {
+		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 		return nil, "", err
 	}
 	requestWriter := multipart.NewWriter(&requestBuffer)
@@ -80,21 +83,26 @@ func (h *httpRequests) saveAvatar(context *gin.Context, id uint64) (*http.Respon
 			"file", fileHeader.Filename))
 	mimeHeader.Set("Content-Type", "application/octet-stream")
 	if fileWriter, err = requestWriter.CreatePart(mimeHeader); err != nil {
+		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 		return nil, "", err
 	}
 	if _, err = io.Copy(fileWriter, fileReader); err != nil {
+		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 		return nil, "", err
 	}
 	var jsonWriter io.Writer
 	var jsonReader io.Reader = bufio.NewReader(bytes.NewBuffer(jsonBuffer))
 	if jsonWriter, err = requestWriter.CreateFormField("json"); err != nil {
+		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 		return nil, "", err
 	}
 	if _, err = io.Copy(jsonWriter, jsonReader); err != nil {
+		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 		return nil, "", err
 	}
 	err = requestWriter.Close()
 	if err != nil {
+		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 		return nil, "", err
 	}
 	ur := strings.Join([]string{
@@ -105,11 +113,13 @@ func (h *httpRequests) saveAvatar(context *gin.Context, id uint64) (*http.Respon
 	client := http.Client{}
 	req, err := http.NewRequest("POST", ur, &requestBuffer)
 	if err != nil {
+		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 		return nil, "", err
 	}
 	req.Header.Set("Content-Type", requestWriter.FormDataContentType())
 	res, err := client.Do(req)
 	if err != nil {
+		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 		return nil, "", err
 	}
 	defer res.Body.Close()
@@ -121,9 +131,11 @@ func (h *httpRequests) saveAvatar(context *gin.Context, id uint64) (*http.Respon
 	}{}
 	bts, err := ioutil.ReadAll(res.Body)
 	if err != nil {
+		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 		return nil, "", err
 	}
 	if err := json.Unmarshal(bts, &jsonResponse); err != nil {
+		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 		return nil, "", err
 	}
 	return res, jsonResponse.URL, nil
