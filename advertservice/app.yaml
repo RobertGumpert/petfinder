@@ -7,5 +7,6 @@ postgres_port: "5432"
 postgres_name: "pet_finder_advert"
 postgres_ssl: "disable"
 
+auth_service: "127.0.0.1:5490"
 mailer_service: "127.0.0.1:4490"
 file_service: "127.0.0.1:4491"

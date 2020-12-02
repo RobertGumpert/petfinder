@@ -122,7 +122,7 @@ func (s *AdvertService) Update(inputViewModel *mapper.UpdateAdvertViewModel, db 
 		return nil, err
 	}
 	updateAdvertEntity := inputViewModel.Mapper()
-	recordedAdvertEntity, err := db.EntityGet(updateAdvertEntity, ctx)
+	recordedAdvertEntity, err := db.EntityGet(&entity.Advert{AdID: inputViewModel.AdID}, ctx)
 	if err != nil {
 		go log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 		return nil, mapper.ErrorBadDataOperation
@@ -144,6 +144,29 @@ func (s *AdvertService) Update(inputViewModel *mapper.UpdateAdvertViewModel, db 
 	return new(mapper.AdvertViewModel).Mapper(updateAdvertEntity), nil
 }
 
+func (s *AdvertService) UpdateOwnerName(inputViewModel *mapper.IdentifierOwnerViewModel, db repository.AdvertRepository, ctx context.Context) error {
+	err := inputViewModel.Validator()
+	if err != nil {
+		return err
+	}
+	var recordedListAdvertEntity []entity.Advert
+	if recordedListAdvertEntity, err = db.EntityList(&entity.Advert{AdOwnerID: inputViewModel.AdOwnerID}, ctx); err != nil {
+		go log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
+		return mapper.ErrorBadDataOperation
+	}
+	ids := make([]uint64, 0)
+	mapUpdate := map[string]interface{}{
+		"ad_owner_name": inputViewModel.AdOwnerName,
+	}
+	for _, advert := range recordedListAdvertEntity {
+		ids = append(ids, advert.AdID)
+	}
+	if err := db.MapUpdateInID(ids, mapUpdate, ctx); err != nil {
+		go log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
+		return err
+	}
+	return nil
+}
 
 func (s *AdvertService) RefreshAdvert(inputViewModel *mapper.IdentifierAdvertViewModel, db repository.AdvertRepository, ctx context.Context) (*mapper.UpdateLifetimeViewModel, error) {
 	err := inputViewModel.Validator()

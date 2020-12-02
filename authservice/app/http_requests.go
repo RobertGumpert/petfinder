@@ -62,11 +62,6 @@ func (h *httpRequests) saveAvatar(id uint64, file multipart.File, fileHeader *mu
 		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 		return nil, "", err
 	}
-	//file, fileHeader, err := context.Request.FormFile("file")
-	//if err != nil {
-	//	log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
-	//	return nil, "", err
-	//}
 	var requestBuffer bytes.Buffer
 	fileBuffer, err := ioutil.ReadAll(file)
 	if err != nil {

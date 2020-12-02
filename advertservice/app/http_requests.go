@@ -1,14 +1,15 @@
 package app
 
 import (
+	"advertservice/pckg/runtimeinfo"
 	"bufio"
 	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"io"
 	"io/ioutil"
+	"log"
 	"mime/multipart"
 	"net/http"
 	"net/textproto"
@@ -21,8 +22,32 @@ func newHttpRequests() *httpRequests {
 	return &httpRequests{}
 }
 
+func (h *httpRequests) isAuthorized(token string) error {
+	url := strings.Join([]string{
+		"http://",
+		application.configs["app"].GetString("auth_service"),
+		"/api/user/access",
+	}, "")
+	client := http.Client{}
+	req, err := http.NewRequest("POST", url, nil)
+	if err != nil {
+		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
+		return err
+	}
+	req.Header.Set("Authorization", strings.Join([]string{"Bearer", token}, " "))
+	res, err := client.Do(req)
+	if err != nil {
+		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
+		return err
+	}
+	defer res.Body.Close()
+	if res.StatusCode != http.StatusOK {
+		return err
+	}
+	return nil
+}
 
-func (h *httpRequests) saveImage(context *gin.Context, id uint64) (*http.Response, string, error) {
+func (h *httpRequests) saveImage(id uint64, file multipart.File, fileHeader *multipart.FileHeader) (*http.Response, string, error) {
 	jsonBuffer, err := json.Marshal(&struct {
 		ID                       uint64 `json:"id"`
 		AdditionalIdentification string `json:"additional_identification"`
@@ -30,15 +55,13 @@ func (h *httpRequests) saveImage(context *gin.Context, id uint64) (*http.Respons
 		ID: id,
 	})
 	if err != nil {
-		return nil, "", err
-	}
-	file, fileHeader, err := context.Request.FormFile("file")
-	if err != nil {
+		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 		return nil, "", err
 	}
 	var requestBuffer bytes.Buffer
 	fileBuffer, err := ioutil.ReadAll(file)
 	if err != nil {
+		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 		return nil, "", err
 	}
 	requestWriter := multipart.NewWriter(&requestBuffer)
@@ -50,21 +73,26 @@ func (h *httpRequests) saveImage(context *gin.Context, id uint64) (*http.Respons
 			"file", fileHeader.Filename))
 	mimeHeader.Set("Content-Type", "application/octet-stream")
 	if fileWriter, err = requestWriter.CreatePart(mimeHeader); err != nil {
+		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 		return nil, "", err
 	}
 	if _, err = io.Copy(fileWriter, fileReader); err != nil {
+		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 		return nil, "", err
 	}
 	var jsonWriter io.Writer
 	var jsonReader io.Reader = bufio.NewReader(bytes.NewBuffer(jsonBuffer))
 	if jsonWriter, err = requestWriter.CreateFormField("json"); err != nil {
+		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 		return nil, "", err
 	}
 	if _, err = io.Copy(jsonWriter, jsonReader); err != nil {
+		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 		return nil, "", err
 	}
 	err = requestWriter.Close()
 	if err != nil {
+		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 		return nil, "", err
 	}
 	ur := strings.Join([]string{
@@ -75,11 +103,13 @@ func (h *httpRequests) saveImage(context *gin.Context, id uint64) (*http.Respons
 	client := http.Client{}
 	req, err := http.NewRequest("POST", ur, &requestBuffer)
 	if err != nil {
+		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 		return nil, "", err
 	}
 	req.Header.Set("Content-Type", requestWriter.FormDataContentType())
 	res, err := client.Do(req)
 	if err != nil {
+		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 		return nil, "", err
 	}
 	defer res.Body.Close()
@@ -91,9 +121,11 @@ func (h *httpRequests) saveImage(context *gin.Context, id uint64) (*http.Respons
 	}{}
 	bts, err := ioutil.ReadAll(res.Body)
 	if err != nil {
+		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 		return nil, "", err
 	}
 	if err := json.Unmarshal(bts, &jsonResponse); err != nil {
+		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 		return nil, "", err
 	}
 	return res, jsonResponse.URL, nil

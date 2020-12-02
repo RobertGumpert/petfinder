@@ -115,10 +115,10 @@ type FindAdvertsViewModel struct {
 }
 
 type SearchInAreaViewModel struct {
-	AdOwnerID    uint64  `json:"ad_owner_id"`
-	OnlyNotClosed bool `json:"only_not_closed"`
-	GeoLongitude float64 `json:"geo_longitude"`
-	GeoLatitude  float64 `json:"geo_latitude"`
+	AdOwnerID     uint64  `json:"ad_owner_id"`
+	OnlyNotClosed bool    `json:"only_not_closed"`
+	GeoLongitude  float64 `json:"geo_longitude"`
+	GeoLatitude   float64 `json:"geo_latitude"`
 }
 
 func (m *SearchInAreaViewModel) Validator() error {
@@ -299,3 +299,7 @@ func (m *UpdateLifetimeViewModel) Mapper(advert *entity.Advert) *UpdateLifetimeV
 	m.DateClose = advert.DateClose
 	return m
 }
+
+//
+//----------------------------------------------------------------------------------------------------------------------
+//
