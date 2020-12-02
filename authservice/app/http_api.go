@@ -6,6 +6,7 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"log"
+	"mime/multipart"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -368,8 +369,15 @@ func (a *apiHttpHandler) updateAvatar(ctx *gin.Context) {
 		})
 		return
 	}
-	func(context *gin.Context, id uint64, app *Application, req *httpRequests) {
-		_, imageUrl, err := req.saveAvatar(context, id)
+	file, fileHeader, err := ctx.Request.FormFile("file")
+	if err != nil {
+		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
+		ctx.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	go func(file multipart.File, fileHeader multipart.FileHeader, id uint64, app *Application, req *httpRequests) {
+		_, imageUrl, err := req.saveAvatar(id, file, &fileHeader)
 		if err == nil {
 			err := app.userService.UpdateAvatar(&mapper.UpdateAvatarViewModel{
 				UserID:    id,
@@ -383,7 +391,7 @@ func (a *apiHttpHandler) updateAvatar(ctx *gin.Context) {
 			log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 			return
 		}
-	}(ctx, user.UserID, application, applicationHttpRequests)
+	}(file, *fileHeader, user.UserID, application, applicationHttpRequests)
 	ctx.AbortWithStatus(http.StatusOK)
 }
 

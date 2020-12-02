@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"io"
 	"io/ioutil"
 	"log"
@@ -52,7 +51,7 @@ func (h *httpRequests) eventUserUpdateName(userId uint64, userName string) {
 }
 
 
-func (h *httpRequests) saveAvatar(context *gin.Context, id uint64) (*http.Response, string, error) {
+func (h *httpRequests) saveAvatar(id uint64, file multipart.File, fileHeader *multipart.FileHeader) (*http.Response, string, error) {
 	jsonBuffer, err := json.Marshal(&struct {
 		ID                       uint64 `json:"id"`
 		AdditionalIdentification string `json:"additional_identification"`
@@ -63,11 +62,11 @@ func (h *httpRequests) saveAvatar(context *gin.Context, id uint64) (*http.Respon
 		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 		return nil, "", err
 	}
-	file, fileHeader, err := context.Request.FormFile("file")
-	if err != nil {
-		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
-		return nil, "", err
-	}
+	//file, fileHeader, err := context.Request.FormFile("file")
+	//if err != nil {
+	//	log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
+	//	return nil, "", err
+	//}
 	var requestBuffer bytes.Buffer
 	fileBuffer, err := ioutil.ReadAll(file)
 	if err != nil {

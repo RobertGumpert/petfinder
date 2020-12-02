@@ -8,6 +8,11 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"sync"
+)
+
+var (
+	mx sync.Mutex
 )
 
 func createFilePath(fileName string, fileGroup groupFiles) (string, string) {
@@ -83,6 +88,8 @@ func saveFile(reader io.Reader, fileGroup groupFiles, fileType typeFiles, viewMo
 	fileName := createFileName(fileGroup, viewModel.ID)
 	fileName = addFilenameExtension(fileName, fileType)
 	filePath, _ := createFilePath(fileName, fileGroup)
+	mx.Lock()
+	defer mx.Unlock()
 	if fileExists(filePath) {
 		if err := os.Remove(filePath); err != nil {
 			return err
