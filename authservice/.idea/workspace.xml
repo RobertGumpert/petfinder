@@ -2,16 +2,27 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3c068240-97f9-427c-adc3-c3626817d406" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../advertservice/app.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../advertservice/app.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../advertservice/app/application.go" beforeDir="false" afterPath="$PROJECT_DIR$/../advertservice/app/application.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../advertservice/app/http_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/../advertservice/app/http_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../advertservice/app/http_requests.go" beforeDir="false" afterPath="$PROJECT_DIR$/../advertservice/app/http_requests.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../advertservice/mapper/advert_types.go" beforeDir="false" afterPath="$PROJECT_DIR$/../advertservice/mapper/advert_types.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../advertservice/mapper/err.go" beforeDir="false" afterPath="$PROJECT_DIR$/../advertservice/mapper/err.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../advertservice/mapper/mapper.go" beforeDir="false" afterPath="$PROJECT_DIR$/../advertservice/mapper/mapper.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../advertservice/service/advert_service.go" beforeDir="false" afterPath="$PROJECT_DIR$/../advertservice/service/advert_service.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dialogservice/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dialogservice/.idea/dataSources.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dialogservice/.idea/dialogservice.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dialogservice/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dialogservice/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dialogservice/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dialogservice/app.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dialogservice/app/application.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dialogservice/app/init_database.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dialogservice/entity/dialog_entities.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dialogservice/entity/gorm_migration.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dialogservice/entity/user_entity.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dialogservice/main.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dialogservice/mapper/const.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dialogservice/repository/gorm_dialog_repository_api.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dialogservice/repository/interface.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dialogservice/repository/test/gorm_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dialogservice/service/dialog_service_api.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/http_requests.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/http_requests.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mailerservice/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../mailerservice/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mailerservice/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/../mailerservice/main.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -42,7 +53,7 @@
     <property name="go.import.settings.migrated" value="true" />
     <property name="go.sdk.automatically.set" value="true" />
     <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../dialogservice" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">

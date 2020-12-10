@@ -1,0 +1,9 @@
+port: "5492"
+
+postgres_username: "postgres"
+postgres_password: "toster123"
+postgres_port: "5432"
+postgres_name: "pet_finder_dialog"
+postgres_ssl: "disable"
+
+auth_service: "127.0.0.1:5490"

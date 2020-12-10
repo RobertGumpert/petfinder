@@ -54,7 +54,7 @@ func userRegister(ctx *gin.Context) {
 		"sign_up",
 		json.Email,
 		json,
-		mailer.TCP,
+		mailer.TLS,
 	)
 	if err != nil {
 		log.Println(err)
@@ -84,7 +84,7 @@ func userAuthorized(ctx *gin.Context) {
 		"sign_in",
 		json.Email,
 		json,
-		mailer.TCP,
+		mailer.TLS,
 	)
 	if err != nil {
 		log.Println(err)
@@ -113,7 +113,7 @@ func resetPasswordToken(ctx *gin.Context) {
 		"reset_pass",
 		json.Email,
 		json,
-		mailer.TCP,
+		mailer.TLS,
 	)
 	if err != nil {
 		log.Println(err)
@@ -142,7 +142,7 @@ func resetPassword(ctx *gin.Context) {
 		"reset_pass_2",
 		json.Email,
 		json,
-		mailer.TCP,
+		mailer.TLS,
 	)
 	if err != nil {
 		log.Println(err)
