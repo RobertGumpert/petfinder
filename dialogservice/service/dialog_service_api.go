@@ -46,7 +46,7 @@ func (s *DialogServiceAPI) DownloadDialogs(owner *mapper.UserViewModel, db repos
 		return nil, mapper.ErrorBadDataOperation
 	}
 	viewModel := new(mapper.DownloadDialogsViewModel)
-	if _, err := viewModel.Mapper(dialogs, dialogsUser, messages, 1, skip); err != nil {
+	if _, err := viewModel.Mapper(dialogs, dialogsUser, messages, owner.UserID, skip); err != nil {
 		go log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 		return nil, mapper.ErrorBadDataOperation
 	}
