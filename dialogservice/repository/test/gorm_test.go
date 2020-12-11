@@ -2,10 +2,13 @@ package test
 
 import (
 	"dialogservice/entity"
+	"dialogservice/mapper"
 	"dialogservice/pckg/storage"
 	"dialogservice/repository"
 	"log"
+	"strconv"
 	"testing"
+	"time"
 )
 
 var (
@@ -20,7 +23,7 @@ var (
 		"disable",
 	)
 
-	api repository.DialogRepositoryAPI = repository.NewDialogAPIGormRepository(postgresOrm.DB)
+	api repository.DialogRepositoryAPI = repository.NewGormDialogRepositoryAPI(postgresOrm.DB)
 )
 
 func foo() {
@@ -91,15 +94,51 @@ func TestAddMessage(t *testing.T)  {
 			UserName:        "Vika",
 			Text:            "aaa",
 		}, nil)
+		_, _ = api.AddNewMessage(&entity.MessageEntity{
+			ForeignDialogID: 1,
+			UserID:          2,
+			UserName:        "Danil",
+			Text:            strconv.Itoa(i),
+		}, nil)
+		time.Sleep(time.Second)
+		_, _ = api.AddNewMessage(&entity.MessageEntity{
+			ForeignDialogID: 2,
+			UserID:          1,
+			UserName:        "Vlad",
+			Text:            "bbbb",
+		}, nil)
+		_, _ = api.AddNewMessage(&entity.MessageEntity{
+			ForeignDialogID: 1,
+			UserID:          1,
+			UserName:        "Vlad",
+			Text:            strconv.Itoa(i * 10),
+		}, nil)
 	}
 }
 
 func TestDownloadDialogs(t *testing.T) {
 
-	messages, _, skip, err := api.DownloadDialogs(1, nil)
+	// select * from message_entities where foreign_dialog_id = 1  ORDER BY date_create DESC
+	// OFFSET 0
+	// ROWS LIMIT 15;
+
+	messages, dialogs, dialogsUser, skip, err := api.DownloadDialogs(1, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
+	var viewModel = new(mapper.DownloadDialogsViewModel)
+	if _, err := viewModel.Mapper(dialogs, dialogsUser, messages, 1, skip); err != nil {
+		log.Println(err)
+	}
+	var mes  = make([]entity.MessageEntity, 0)
+	for _, m := range messages {
+		if m.ForeignDialogID == 1{
+			mes = append(mes, m)
+		}
+	}
+	log.Println("Skip -> ", skip)
+	log.Println(mes[0].MessageID)
+	log.Println(mes[len(mes)-1].MessageID)
 
 	messages, skip, err = api.DownloadNextMessagesBatch(1, skip, nil)
 	if len(messages) == 0{

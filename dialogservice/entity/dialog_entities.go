@@ -35,6 +35,7 @@ type DialogUserEntity struct {
 	//
 	// PROPS
 	//
+	DialogName     string    `gorm:"size:255;not null"`
 	UserID         uint64    `gorm:"not null"`
 	UserName       string    `gorm:"size:255;not null"`
 	DialogUserID   uint64    `gorm:"primary_key;auto_increment"`

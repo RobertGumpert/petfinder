@@ -4,19 +4,23 @@ import (
 	"context"
 	"dialogservice/entity"
 	"dialogservice/mapper"
+	"dialogservice/pckg/runtimeinfo"
 	"gorm.io/gorm"
+	"log"
+	"sync"
 	"time"
 )
 
-type DialogAPIGormRepository struct {
+type GormDialogRepositoryAPI struct {
 	*gorm.DB
 }
 
-func NewDialogAPIGormRepository(DB *gorm.DB) *DialogAPIGormRepository {
-	return &DialogAPIGormRepository{DB: DB}
+
+func NewGormDialogRepositoryAPI(DB *gorm.DB) *GormDialogRepositoryAPI {
+	return &GormDialogRepositoryAPI{DB: DB}
 }
 
-func (d *DialogAPIGormRepository) createDialogUser(dialogEntity *entity.DialogUserEntity, ctx context.Context) (uint64, error) {
+func (d *GormDialogRepositoryAPI) createDialogUser(dialogEntity *entity.DialogUserEntity, ctx context.Context) (uint64, error) {
 	tx := d.Begin()
 	defer func() {
 		if r := recover(); r != nil {
@@ -33,7 +37,7 @@ func (d *DialogAPIGormRepository) createDialogUser(dialogEntity *entity.DialogUs
 	return dialogEntity.DialogUserID, nil
 }
 
-func (d *DialogAPIGormRepository) getListByUser(userId uint64, ctx context.Context) ([]entity.DialogUserEntity, error) {
+func (d *GormDialogRepositoryAPI) getListByUser(userId uint64, ctx context.Context) ([]entity.DialogUserEntity, error) {
 	var (
 		userDialogs []entity.DialogUserEntity
 	)
@@ -43,11 +47,11 @@ func (d *DialogAPIGormRepository) getListByUser(userId uint64, ctx context.Conte
 	return userDialogs, nil
 }
 
-func (d *DialogAPIGormRepository) updateByUser(userId uint64, status mapper.DialogUserStatus, ctx context.Context) {
+func (d *GormDialogRepositoryAPI) updateByUser(userId uint64, status mapper.DialogUserStatus, ctx context.Context) {
 	return
 }
 
-func (d *DialogAPIGormRepository) createMessage(message *entity.MessageEntity, ctx context.Context) (uint64, error) {
+func (d *GormDialogRepositoryAPI) createMessage(message *entity.MessageEntity, ctx context.Context) (uint64, error) {
 	tx := d.Begin()
 	defer func() {
 		if r := recover(); r != nil {
@@ -61,15 +65,15 @@ func (d *DialogAPIGormRepository) createMessage(message *entity.MessageEntity, c
 	return message.MessageID, tx.Commit().Error
 }
 
-func (d *DialogAPIGormRepository) getMessageList(dialogId uint64, ctx context.Context) ([]entity.MessageEntity, error) {
+func (d *GormDialogRepositoryAPI) getMessageList(dialogId uint64, ctx context.Context) ([]entity.MessageEntity, error) {
 	return nil, nil
 }
 
-func (d *DialogAPIGormRepository) getMessageByID(messageId uint64, ctx context.Context) (*entity.MessageEntity, error) {
+func (d *GormDialogRepositoryAPI) getMessageByID(messageId uint64, ctx context.Context) (*entity.MessageEntity, error) {
 	return &entity.MessageEntity{}, nil
 }
 
-func (d *DialogAPIGormRepository) createDialog(dialogEntity *entity.DialogEntity, ctx context.Context) (uint64, error) {
+func (d *GormDialogRepositoryAPI) createDialog(dialogEntity *entity.DialogEntity, ctx context.Context) (uint64, error) {
 	tx := d.Begin()
 	defer func() {
 		if r := recover(); r != nil {
@@ -83,7 +87,7 @@ func (d *DialogAPIGormRepository) createDialog(dialogEntity *entity.DialogEntity
 	return dialogEntity.DialogID, tx.Commit().Error
 }
 
-func (d *DialogAPIGormRepository) getDialog(dialogId uint64, ctx context.Context) (*entity.DialogEntity, error) {
+func (d *GormDialogRepositoryAPI) getDialog(dialogId uint64, ctx context.Context) (*entity.DialogEntity, error) {
 	return &entity.DialogEntity{}, nil
 }
 
@@ -91,7 +95,7 @@ func (d *DialogAPIGormRepository) getDialog(dialogId uint64, ctx context.Context
 // API
 //
 
-func (d *DialogAPIGormRepository) CreateNewDialog(users []*entity.UserEntity, ctx context.Context) (uint64, error) {
+func (d *GormDialogRepositoryAPI) CreateNewDialog(users []*entity.UserEntity, ctx context.Context) (uint64, error) {
 	dateCreate := time.Now()
 	newDialog := new(entity.DialogEntity)
 	newDialog.DateCreate = dateCreate
@@ -99,23 +103,34 @@ func (d *DialogAPIGormRepository) CreateNewDialog(users []*entity.UserEntity, ct
 	if err != nil {
 		return 0, err
 	}
-	for _, user := range users {
-		_, err := d.createDialogUser(&entity.DialogUserEntity{
-			ForeignDialogID: id,
-			Dialog:          *newDialog,
-			DateCreate:      dateCreate,
-			UserID:          user.ID,
-			UserName:        user.Name,
-			ActivityStatus:  uint64(mapper.DialogUserStatusActive),
-		}, nil)
-		if err != nil {
-			return 0, err
-		}
+	_, err = d.createDialogUser(&entity.DialogUserEntity{
+		ForeignDialogID: id,
+		Dialog:          *newDialog,
+		DateCreate:      dateCreate,
+		UserID:          users[0].ID,
+		UserName:        users[0].Name,
+		DialogName:      users[1].Name,
+		ActivityStatus:  uint64(mapper.DialogUserStatusActive),
+	}, nil)
+	if err != nil {
+		return 0, err
+	}
+	_, err = d.createDialogUser(&entity.DialogUserEntity{
+		ForeignDialogID: id,
+		Dialog:          *newDialog,
+		DateCreate:      dateCreate,
+		UserID:          users[1].ID,
+		UserName:        users[1].Name,
+		DialogName:      users[0].Name,
+		ActivityStatus:  uint64(mapper.DialogUserStatusActive),
+	}, nil)
+	if err != nil {
+		return 0, err
 	}
 	return id, err
 }
 
-func (d *DialogAPIGormRepository) AddNewMessage(message *entity.MessageEntity, ctx context.Context) (uint64, error) {
+func (d *GormDialogRepositoryAPI) AddNewMessage(message *entity.MessageEntity, ctx context.Context) (uint64, error) {
 	dateCreate := time.Now()
 	message.DateCreate = dateCreate
 	message.Dialog = entity.DialogEntity{
@@ -125,33 +140,45 @@ func (d *DialogAPIGormRepository) AddNewMessage(message *entity.MessageEntity, c
 	return id, err
 }
 
-func (d *DialogAPIGormRepository) UpdateUserName(userId uint64, userName string, ctx context.Context) error {
+func (d *GormDialogRepositoryAPI) UpdateUserName(userId uint64, userName string, ctx context.Context) error {
 	return nil
 }
 
-func (d *DialogAPIGormRepository) DownloadDialogs(userId uint64, ctx context.Context) ([]entity.MessageEntity, []entity.DialogEntity, uint64, error) {
-	userDialogs, err := d.getListByUser(userId, ctx)
+func (d *GormDialogRepositoryAPI) DownloadDialogs(userId uint64, ctx context.Context) ([]entity.MessageEntity, []entity.DialogEntity, []entity.DialogUserEntity, uint64, error) {
+	dialogsUser, err := d.getListByUser(userId, ctx)
 	if err != nil {
-		return nil, nil, 0, err
+		return nil, nil, nil, 0, err
 	}
 	var (
-		dialogs  []entity.DialogEntity
-		messages []entity.MessageEntity
-		ids      = make([]uint64, 0)
+		dialogs   []entity.DialogEntity
+		messages  = make([]entity.MessageEntity, 0)
+		dialogIds = make([]uint64, 0)
+		wg        sync.WaitGroup
+		skip      uint64 = 0
 	)
-	for _, userDialog := range userDialogs {
+	for _, userDialog := range dialogsUser {
 		dialogs = append(dialogs, entity.DialogEntity{
 			DialogID: userDialog.ForeignDialogID,
 		})
-		ids = append(ids, userDialog.ForeignDialogID)
+		dialogIds = append(dialogIds, userDialog.ForeignDialogID)
 	}
-	if err := d.Where("foreign_dialog_id IN ?", ids).Order("date_create desc").Limit(15).Find(&messages).Error; err != nil {
-		return nil, nil, 0, err
+	for _, dialogId := range dialogIds {
+		wg.Add(1)
+		go func(wg *sync.WaitGroup, dialogId uint64) {
+			defer wg.Done()
+			var dialogMessages []entity.MessageEntity
+			if err := d.Where("foreign_dialog_id = ?", dialogId).Order("date_create desc").Limit(15).Find(&dialogMessages).Error; err != nil {
+				log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
+				return
+			}
+			messages = append(messages, dialogMessages...)
+		}(&wg, dialogId)
 	}
-	return messages, dialogs, 0, nil
+	wg.Wait()
+	return messages, dialogs, dialogsUser, skip, nil
 }
 
-func (d *DialogAPIGormRepository) DownloadNextMessagesBatch(dialogId uint64, lastSkip uint64, ctx context.Context) ([]entity.MessageEntity, uint64, error) {
+func (d *GormDialogRepositoryAPI) DownloadNextMessagesBatch(dialogId uint64, lastSkip uint64, ctx context.Context) ([]entity.MessageEntity, uint64, error) {
 	var (
 		messages []entity.MessageEntity
 		nextSkip = lastSkip + 15

@@ -2,27 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3c068240-97f9-427c-adc3-c3626817d406" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../dialogservice/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../dialogservice/.idea/dataSources.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../dialogservice/.idea/dialogservice.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../dialogservice/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../dialogservice/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../dialogservice/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../dialogservice/app.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../dialogservice/app/application.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../dialogservice/app/init_database.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../dialogservice/entity/dialog_entities.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../dialogservice/entity/gorm_migration.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../dialogservice/entity/user_entity.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../dialogservice/main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../dialogservice/mapper/const.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../dialogservice/repository/gorm_dialog_repository_api.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../dialogservice/repository/interface.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../dialogservice/repository/test/gorm_test.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../dialogservice/service/dialog_service_api.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dialogservice/mapper/err.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dialogservice/mapper/mapper.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mailerservice/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../mailerservice/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mailerservice/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/../mailerservice/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dialogservice/entity/dialog_entities.go" beforeDir="false" afterPath="$PROJECT_DIR$/../dialogservice/entity/dialog_entities.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dialogservice/repository/gorm_dialog_repository_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/../dialogservice/repository/gorm_dialog_repository_api.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dialogservice/repository/interface.go" beforeDir="false" afterPath="$PROJECT_DIR$/../dialogservice/repository/interface.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dialogservice/repository/test/gorm_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/../dialogservice/repository/test/gorm_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dialogservice/service/dialog_service_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/../dialogservice/service/dialog_service_api.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

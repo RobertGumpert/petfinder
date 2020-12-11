@@ -31,6 +31,6 @@ type DialogRepositoryAPI interface {
 	CreateNewDialog(users []*entity.UserEntity, ctx context.Context) (uint64, error)
 	AddNewMessage(message *entity.MessageEntity, ctx context.Context) (uint64, error)
 	UpdateUserName(userId uint64, userName string, ctx context.Context) error
-	DownloadDialogs(userId uint64, ctx context.Context) ([]entity.MessageEntity, []entity.DialogEntity, uint64, error)
+	DownloadDialogs(userId uint64, ctx context.Context) ([]entity.MessageEntity, []entity.DialogEntity, []entity.DialogUserEntity, uint64, error)
 	DownloadNextMessagesBatch(dialogId uint64, lastSkip uint64, ctx context.Context) ([]entity.MessageEntity,  uint64, error)
 }
