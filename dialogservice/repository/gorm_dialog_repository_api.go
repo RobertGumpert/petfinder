@@ -15,7 +15,6 @@ type GormDialogRepositoryAPI struct {
 	*gorm.DB
 }
 
-
 func NewGormDialogRepositoryAPI(DB *gorm.DB) *GormDialogRepositoryAPI {
 	return &GormDialogRepositoryAPI{DB: DB}
 }
@@ -96,38 +95,42 @@ func (d *GormDialogRepositoryAPI) getDialog(dialogId uint64, ctx context.Context
 //
 
 func (d *GormDialogRepositoryAPI) CreateNewDialog(users []*entity.UserEntity, ctx context.Context) (uint64, error) {
+	var (
+		addDialogUser = func(ownerID, receiverID uint64, dateCreate time.Time, newDialog entity.DialogEntity) error {
+			_, err := d.createDialogUser(&entity.DialogUserEntity{
+				ForeignDialogID: newDialog.DialogID,
+				Dialog:          newDialog,
+				DateCreate:      dateCreate,
+				UserID:          users[ownerID].ID,
+				UserName:        users[ownerID].Name,
+				DialogName:      users[receiverID].Name,
+				ActivityStatus:  uint64(mapper.DialogUserStatusActive),
+			}, nil)
+			return err
+		}
+		existRowByUserName entity.DialogUserEntity
+	)
+	err := d.Where(&entity.DialogUserEntity{UserName: users[0].Name, DialogName: users[1].Name}).First(&existRowByUserName).Error
+	if err != nil {
+		if err != gorm.ErrRecordNotFound {
+			return 0, nil
+		}
+	}
 	dateCreate := time.Now()
 	newDialog := new(entity.DialogEntity)
 	newDialog.DateCreate = dateCreate
-	id, err := d.createDialog(newDialog, ctx)
+	dialogId, err := d.createDialog(newDialog, ctx)
 	if err != nil {
 		return 0, err
 	}
-	_, err = d.createDialogUser(&entity.DialogUserEntity{
-		ForeignDialogID: id,
-		Dialog:          *newDialog,
-		DateCreate:      dateCreate,
-		UserID:          users[0].ID,
-		UserName:        users[0].Name,
-		DialogName:      users[1].Name,
-		ActivityStatus:  uint64(mapper.DialogUserStatusActive),
-	}, nil)
-	if err != nil {
+	newDialog.DialogID = dialogId
+	if err := addDialogUser(0, 1, dateCreate, *newDialog); err != nil {
 		return 0, err
 	}
-	_, err = d.createDialogUser(&entity.DialogUserEntity{
-		ForeignDialogID: id,
-		Dialog:          *newDialog,
-		DateCreate:      dateCreate,
-		UserID:          users[1].ID,
-		UserName:        users[1].Name,
-		DialogName:      users[0].Name,
-		ActivityStatus:  uint64(mapper.DialogUserStatusActive),
-	}, nil)
-	if err != nil {
+	if err := addDialogUser(1, 0, dateCreate, *newDialog); err != nil {
 		return 0, err
 	}
-	return id, err
+	return dialogId, err
 }
 
 func (d *GormDialogRepositoryAPI) AddNewMessage(message *entity.MessageEntity, ctx context.Context) (uint64, error) {
@@ -167,7 +170,7 @@ func (d *GormDialogRepositoryAPI) DownloadDialogs(userId uint64, ctx context.Con
 		go func(wg *sync.WaitGroup, dialogId uint64) {
 			defer wg.Done()
 			var dialogMessages []entity.MessageEntity
-			if err := d.Where("foreign_dialog_id = ?", dialogId).Order("date_create desc").Limit(15).Find(&dialogMessages).Error; err != nil {
+			if err := d.Where("foreign_dialog_id = ?", dialogId).Order("date_create desc").Limit(mapper.BatchSizeMessages).Find(&dialogMessages).Error; err != nil {
 				log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 				return
 			}
@@ -181,9 +184,9 @@ func (d *GormDialogRepositoryAPI) DownloadDialogs(userId uint64, ctx context.Con
 func (d *GormDialogRepositoryAPI) DownloadNextMessagesBatch(dialogId uint64, lastSkip uint64, ctx context.Context) ([]entity.MessageEntity, uint64, error) {
 	var (
 		messages []entity.MessageEntity
-		nextSkip = lastSkip + 15
+		nextSkip = lastSkip + uint64(mapper.BatchSizeMessages)
 	)
-	if err := d.Where("foreign_dialog_id = ?", dialogId).Order("date_create desc").Offset(int(nextSkip)).Limit(15).Find(&messages).Error; err != nil {
+	if err := d.Where("foreign_dialog_id = ?", dialogId).Order("date_create desc").Offset(int(nextSkip)).Limit(mapper.BatchSizeMessages).Find(&messages).Error; err != nil {
 		return nil, nextSkip, err
 	}
 	return messages, nextSkip, nil

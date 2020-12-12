@@ -29,7 +29,6 @@ type DialogUserEntity struct {
 	//
 	// FOREIGN KEY'S
 	//
-	//ForeignDialogID uint64 `gorm:"not null;foreignKey:ForeignDialogID;references:DialogID;constraint:OnUpdate:SET NULL,OnDelete:SET NULL;"`
 	ForeignDialogID uint64
 	Dialog          DialogEntity `gorm:"foreignKey:ForeignDialogID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	//
@@ -37,7 +36,7 @@ type DialogUserEntity struct {
 	//
 	DialogName string `gorm:"uniqueIndex:member;size:255;not null"`
 	//
-	UserID       uint64 //`gorm:"primary_key;autoIncrement:false"`
+	UserID       uint64
 	DialogUserID uint64 `gorm:"primary_key;auto_increment"`
 	//
 	UserName       string    `gorm:"uniqueIndex:member;size:255;not null"`

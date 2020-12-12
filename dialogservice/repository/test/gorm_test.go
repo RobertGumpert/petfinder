@@ -78,7 +78,7 @@ func TestCreateFlow(t *testing.T) {
 	if err == nil {
 		t.Fatal(err)
 	}
-	log.Println(id)
+	log.Println("Попытка добавить существующий диалог.")
 	//
 	id, err = api.CreateNewDialog([]*entity.UserEntity{
 		{
@@ -93,7 +93,7 @@ func TestCreateFlow(t *testing.T) {
 	if err == nil {
 		t.Fatal(err)
 	}
-	log.Println(id)
+	log.Println("Попытка добавить существующий диалог.")
 	//
 	id, err = api.CreateNewDialog([]*entity.UserEntity{
 		{

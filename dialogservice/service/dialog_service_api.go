@@ -11,6 +11,10 @@ import (
 
 type DialogServiceAPI struct{}
 
+func NewDialogServiceAPI() *DialogServiceAPI {
+	return &DialogServiceAPI{}
+}
+
 func (s *DialogServiceAPI) CreateNewDialog(owner *mapper.UserViewModel, receiver *mapper.UserViewModel, db repository.DialogRepositoryAPI, ctx context.Context) (*mapper.CreateNewDialogViewModel, error) {
 	if owner == nil || receiver == nil {
 		return nil, mapper.ErrorNonValidData
