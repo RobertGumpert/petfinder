@@ -67,6 +67,36 @@ func TestCreateFlow(t *testing.T) {
 	//
 	id, err = api.CreateNewDialog([]*entity.UserEntity{
 		{
+			ID:   1,
+			Name: "Vlad",
+		},
+		{
+			ID:   3,
+			Name: "Vika",
+		},
+	}, nil)
+	if err == nil {
+		t.Fatal(err)
+	}
+	log.Println(id)
+	//
+	id, err = api.CreateNewDialog([]*entity.UserEntity{
+		{
+			ID:   3,
+			Name: "Vika",
+		},
+		{
+			ID:   1,
+			Name: "Vlad",
+		},
+	}, nil)
+	if err == nil {
+		t.Fatal(err)
+	}
+	log.Println(id)
+	//
+	id, err = api.CreateNewDialog([]*entity.UserEntity{
+		{
 			ID:   3,
 			Name: "Vika",
 		},

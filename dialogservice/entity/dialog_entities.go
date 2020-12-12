@@ -35,10 +35,12 @@ type DialogUserEntity struct {
 	//
 	// PROPS
 	//
-	DialogName     string    `gorm:"size:255;not null"`
-	UserID         uint64    `gorm:"not null"`
-	UserName       string    `gorm:"size:255;not null"`
-	DialogUserID   uint64    `gorm:"primary_key;auto_increment"`
+	DialogName string `gorm:"uniqueIndex:member;size:255;not null"`
+	//
+	UserID       uint64 //`gorm:"primary_key;autoIncrement:false"`
+	DialogUserID uint64 `gorm:"primary_key;auto_increment"`
+	//
+	UserName       string    `gorm:"uniqueIndex:member;size:255;not null"`
 	ActivityStatus uint64    `gorm:"size:10;not null;"`
 	DateCreate     time.Time `gorm:"default:CURRENT_TIMESTAMP;not null;"`
 
