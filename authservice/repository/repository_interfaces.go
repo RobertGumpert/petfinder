@@ -7,6 +7,7 @@ import (
 
 type UserRepository interface {
 	Create(user *entity.User, ctx context.Context) error
+	GetByID(id uint64, ctx context.Context) (*entity.User, error)
 	//
 	EntityUpdate(user *entity.User, ctx context.Context) error
 	EntityGet(user *entity.User, ctx context.Context) (*entity.User, error)

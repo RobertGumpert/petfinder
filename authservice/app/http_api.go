@@ -38,7 +38,7 @@ func (a *apiHttpHandler) getServer() func() {
 			auth.POST("/update", a.updateAccessToken)
 		}
 
-		passReset := api.Group("/password")
+		passReset := api.Group("/password", a.middlewareAccessToken)
 		{
 			passReset.POST("/token", a.getResetPasswordToken)
 			passReset.POST("/reset", a.resetPassword)
@@ -107,6 +107,11 @@ func (a *apiHttpHandler) register(ctx *gin.Context) {
 		})
 		return
 	}
+	viewModel.AvatarURL = strings.Join([]string{
+		"http://",
+		application.configs["app"].GetString("file_service"),
+		"/download/avatar/id/base",
+	}, "")
 	response, err := application.userService.Register(
 		viewModel,
 		application.userPostgresRepository,
@@ -222,6 +227,20 @@ func (a *apiHttpHandler) updateAccessToken(ctx *gin.Context) {
 }
 
 func (a *apiHttpHandler) getResetPasswordToken(ctx *gin.Context) {
+	token := ctx.MustGet("authorization").(string)
+	_, err := application.userService.IsAuthorized(
+		&mapper.IsAuthorizedViewModel{Access: token},
+		application.userPostgresRepository,
+		nil,
+	)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, struct {
+			Error string `json:"error"`
+		}{
+			Error: err.Error(),
+		})
+		return
+	}
 	viewModel := new(mapper.ResetPasswordViewModel)
 	if err := ctx.BindJSON(viewModel); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, struct {
@@ -231,7 +250,7 @@ func (a *apiHttpHandler) getResetPasswordToken(ctx *gin.Context) {
 		})
 		return
 	}
-	token, err := application.userService.GetResetPasswordToken(
+	resetToken, err := application.userService.GetResetPasswordToken(
 		viewModel,
 		application.userPostgresRepository,
 		nil,
@@ -244,11 +263,25 @@ func (a *apiHttpHandler) getResetPasswordToken(ctx *gin.Context) {
 		})
 		return
 	}
-	go applicationHttpRequests.mailerResetPasswordToken(token, viewModel.Email)
+	go applicationHttpRequests.mailerResetPasswordToken(resetToken, viewModel.Email)
 	ctx.AbortWithStatus(http.StatusOK)
 }
 
 func (a *apiHttpHandler) resetPassword(ctx *gin.Context) {
+	token := ctx.MustGet("authorization").(string)
+	_, err := application.userService.IsAuthorized(
+		&mapper.IsAuthorizedViewModel{Access: token},
+		application.userPostgresRepository,
+		nil,
+	)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, struct {
+			Error string `json:"error"`
+		}{
+			Error: err.Error(),
+		})
+		return
+	}
 	viewModel := new(mapper.ResetPasswordViewModel)
 	if err := ctx.BindJSON(viewModel); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, struct {
@@ -303,13 +336,14 @@ func (a *apiHttpHandler) update(ctx *gin.Context) {
 		})
 		return
 	}
+	viewModel.AccessToken = token
 	response, err := application.userService.Update(
 		viewModel,
 		application.userPostgresRepository,
 		nil,
 	)
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusUnauthorized, struct {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, struct {
 			Error string `json:"error"`
 		}{
 			Error: err.Error(),
@@ -411,7 +445,7 @@ func (a *apiHttpHandler) get(ctx *gin.Context) {
 		nil,
 	)
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusUnauthorized, struct {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, struct {
 			Error string `json:"error"`
 		}{
 			Error: err.Error(),

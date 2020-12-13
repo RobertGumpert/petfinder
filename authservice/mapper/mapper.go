@@ -29,11 +29,12 @@ func (m *UserListViewModel) Mapper2(list []*UserViewModel) *UserListViewModel {
 //---------------------------------------------------
 
 type UserViewModel struct {
-	UserID    uint64 `json:"user_id"`
-	Telephone string `json:"telephone"`
-	Email     string `json:"email"`
-	Name      string `json:"name"`
-	AvatarUrl string `json:"avatar_url"`
+	UserID      uint64 `json:"user_id"`
+	Telephone   string `json:"telephone"`
+	Email       string `json:"email"`
+	Name        string `json:"name"`
+	AvatarUrl   string `json:"avatar_url"`
+	AccessToken string `json:"access_token"`
 }
 
 func (m *UserViewModel) Mapper(user *entity.User) *UserViewModel {
@@ -85,11 +86,12 @@ func (m *FindUserViewModel) Mapper() *entity.User {
 //---------------------------------------------------
 
 type UpdateUserViewModel struct {
-	UserID    uint64 `json:"user_id"`
-	Telephone string `json:"telephone"`
-	Email     string `json:"email"`
-	Name      string `json:"name"`
-	AvatarUrl string `json:"avatar_url"`
+	UserID      uint64 `json:"user_id"`
+	Telephone   string `json:"telephone"`
+	Email       string `json:"email"`
+	Name        string `json:"name"`
+	AvatarUrl   string `json:"avatar_url"`
+	AccessToken string `json:"access_token"`
 }
 
 func (m *UpdateUserViewModel) Validator() error {
@@ -151,6 +153,7 @@ type RegisterUserViewModel struct {
 	Password  string `json:"password"`
 	Email     string `json:"email"`
 	Name      string `json:"name"`
+	AvatarURL string
 }
 
 func (m *RegisterUserViewModel) Mapper() *entity.User {
@@ -159,6 +162,7 @@ func (m *RegisterUserViewModel) Mapper() *entity.User {
 		Password:  m.Password,
 		Email:     m.Email,
 		Name:      m.Name,
+		AvatarURL: m.AvatarURL,
 	}
 }
 

@@ -10,6 +10,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -117,15 +118,34 @@ func serverStart() {
 
 func download(context *gin.Context, fileGroup groupFiles) error {
 	paramId := context.Param("id")
-	id, err := strconv.Atoi(paramId)
-	if err != nil {
-		return err
-	}
-	file, err := findFileByID(fileGroup, uint64(id), false)
-	if err != nil {
-		return err
-	}
+	var file *os.File
 	defer file.Close()
+
+	if paramId == "base" {
+		var p = root
+		if fileGroup == avatarGroupFiles {
+			p = p + "/storage/avatar/base.jpg"
+		}
+		if fileGroup == advertGroupFiles {
+			p = p + "/storage/advert/base.jpg"
+		}
+		f, err := os.Open(p)
+		if err != nil {
+			return err
+		}
+		file = f
+	} else {
+		id, err := strconv.Atoi(paramId)
+		if err != nil {
+			return err
+		}
+		f, err := findFileByID(fileGroup, uint64(id), false)
+		if err != nil {
+			return err
+		}
+		file = f
+	}
+
 	info, err := file.Stat()
 	if err != nil {
 		return err
@@ -135,6 +155,7 @@ func download(context *gin.Context, fileGroup groupFiles) error {
 	if err != nil {
 		return err
 	}
+
 	fileContentType := http.DetectContentType(buffer)
 	context.Writer.Header().Set("Content-Disposition", "attachment; filename="+info.Name())
 	context.Writer.Header().Set("Content-Type", fileContentType)

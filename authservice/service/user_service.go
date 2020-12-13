@@ -186,18 +186,47 @@ func (u *User) Update(inputViewModel *mapper.UpdateUserViewModel, db repository.
 	if err := inputViewModel.Validator(); err != nil {
 		return nil, err
 	}
+	response := new(mapper.UserViewModel)
+	response.AccessToken = inputViewModel.AccessToken
+	//
 	parseUserEntity := inputViewModel.Mapper()
-	err := db.EntityUpdate(parseUserEntity, ctx)
+	findUserEntity, err := db.GetByID(parseUserEntity.UserID, ctx)
+	if err != nil {
+		go log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
+		return nil, mapper.ErrorNonExistUser
+	}
+	//
+	if strings.TrimSpace(parseUserEntity.Name) != "" || strings.TrimSpace(parseUserEntity.Telephone) != "" {
+		var(
+			n, t = strings.TrimSpace(parseUserEntity.Name), strings.TrimSpace(parseUserEntity.Telephone)
+		)
+		if n != "" && t == "" {
+			parseUserEntity.Telephone = findUserEntity.Telephone
+		}
+		if n == "" && t != "" {
+			parseUserEntity.Name = findUserEntity.Name
+		}
+		access, refresh, err := u.createAuthorizationTokens(parseUserEntity)
+		if err != nil {
+			go log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
+			return nil, mapper.ErrorBadDataOperation
+		}
+		parseUserEntity.RefreshToken = refresh
+		response.AccessToken = access
+	}
+	//
+	err = db.EntityUpdate(parseUserEntity, ctx)
 	if err != nil {
 		go log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 		return nil, mapper.ErrorBadDataOperation
 	}
+	//
 	updateUserEntity, err := db.EntityGet(parseUserEntity, ctx)
 	if err != nil {
 		go log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 		return nil, mapper.ErrorNonExistUser
 	}
-	return new(mapper.UserViewModel).Mapper(updateUserEntity), nil
+	return response.Mapper(updateUserEntity), nil
 }
 
 func (u *User) UpdateAvatar(inputViewModel *mapper.UpdateAvatarViewModel, db repository.UserRepository, ctx context.Context) error {
