@@ -6,6 +6,25 @@ import (
 	"time"
 )
 
+type UserViewModel struct {
+	UserID    uint64 `json:"user_id"`
+	Telephone string `json:"telephone"`
+	Email     string `json:"email"`
+	Name      string `json:"name"`
+	AvatarUrl string `json:"avatar_url"`
+}
+
+func (m *UserViewModel) Validator() error {
+	if m.UserID == 0 || strings.TrimSpace(m.Name) == "" {
+		return ErrorNonValidData
+	}
+	return nil
+}
+
+//
+//----------------------------------------------------------------------------------------------------------------------
+//
+
 type AdvertViewModel struct {
 	AdOwnerID    uint64     `json:"ad_owner_id"`
 	AdOwnerName  string     `json:"ad_owner_name"`

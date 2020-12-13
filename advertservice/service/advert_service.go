@@ -7,6 +7,7 @@ import (
 	"advertservice/repository"
 	"context"
 	"log"
+	"strings"
 	"time"
 )
 
@@ -128,7 +129,7 @@ func (s *AdvertService) Update(inputViewModel *mapper.UpdateAdvertViewModel, db 
 		return nil, mapper.ErrorBadDataOperation
 	}
 	if inputViewModel.AdType != recordedAdvertEntity.AdType {
-		if err = s.setLifetime(updateAdvertEntity, true); err != nil {
+		if err = s.setLifetime(updateAdvertEntity, false); err != nil {
 			go log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 			return nil, mapper.ErrorNonValidData
 		}
@@ -136,6 +137,16 @@ func (s *AdvertService) Update(inputViewModel *mapper.UpdateAdvertViewModel, db 
 	if err = db.EntityUpdate(updateAdvertEntity, ctx); err != nil {
 		go log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 		return nil, mapper.ErrorBadDataOperation
+	}
+	if strings.TrimSpace(updateAdvertEntity.CommentText) != "" && recordedAdvertEntity.CommentText != updateAdvertEntity.CommentText {
+		if err = db.MapUpdate(
+			updateAdvertEntity.AdID,
+			map[string]interface{}{
+				"comment_text": updateAdvertEntity.CommentText,
+			}, ctx); err != nil {
+			go log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
+			return nil, mapper.ErrorBadDataOperation
+		}
 	}
 	if updateAdvertEntity, err = db.EntityGet(updateAdvertEntity, ctx); err != nil {
 		go log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")

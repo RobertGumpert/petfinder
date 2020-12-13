@@ -1,6 +1,7 @@
 package app
 
 import (
+	"advertservice/mapper"
 	"advertservice/pckg/runtimeinfo"
 	"bufio"
 	"bytes"
@@ -22,7 +23,7 @@ func newHttpRequests() *httpRequests {
 	return &httpRequests{}
 }
 
-func (h *httpRequests) isAuthorized(token string) error {
+func (h *httpRequests) isAuthorized(token string) (*mapper.UserViewModel, error) {
 	url := strings.Join([]string{
 		"http://",
 		application.configs["app"].GetString("auth_service"),
@@ -32,19 +33,29 @@ func (h *httpRequests) isAuthorized(token string) error {
 	req, err := http.NewRequest("POST", url, nil)
 	if err != nil {
 		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
-		return err
+		return nil, err
 	}
 	req.Header.Set("Authorization", strings.Join([]string{"Bearer", token}, " "))
 	res, err := client.Do(req)
 	if err != nil {
 		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
-		return err
+		return nil, err
 	}
 	defer res.Body.Close()
 	if res.StatusCode != http.StatusOK {
-		return err
+		return nil, errors.New("Http code : " + res.Status)
 	}
-	return nil
+	authUser := new(mapper.UserViewModel)
+	bts, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
+		return nil, err
+	}
+	if err := json.Unmarshal(bts, authUser); err != nil {
+		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
+		return nil, err
+	}
+	return authUser, nil
 }
 
 func (h *httpRequests) saveImage(id uint64, file multipart.File, fileHeader *multipart.FileHeader) (*http.Response, string, error) {

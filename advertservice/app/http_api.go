@@ -85,15 +85,29 @@ func (a *apiHttpHandler) middlewareAccessToken(ctx *gin.Context) {
 		ctx.AbortWithStatus(http.StatusUnauthorized)
 		return
 	}
-	if err := applicationHttpRequests.isAuthorized(token); err != nil {
+	var authUser *mapper.UserViewModel
+	if authUser, err = applicationHttpRequests.isAuthorized(token); err != nil {
 		ctx.AbortWithStatus(http.StatusUnauthorized)
 		return
 	}
-	ctx.Set("authorization", token)
+	ctx.Set("authorization", authUser)
 }
 
 func (a *apiHttpHandler) addAdvert(ctx *gin.Context) {
+	authUser := ctx.MustGet("authorization").(*mapper.UserViewModel)
+	if err := authUser.Validator(); err != nil {
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, struct {
+			Error string `json:"error"`
+		}{
+			Error: mapper.ErrorNonValidData.Error(),
+		})
+		return
+	}
+	//
 	viewModel := new(mapper.CreateAdvertViewModel)
+	viewModel.AdOwnerID = authUser.UserID
+	viewModel.AdOwnerName = authUser.Name
+	//
 	jsonForm := ctx.PostForm("json")
 	if jsonForm != "" {
 		err := json.Unmarshal([]byte(jsonForm), viewModel)
@@ -156,6 +170,16 @@ func (a *apiHttpHandler) addAdvert(ctx *gin.Context) {
 }
 
 func (a *apiHttpHandler) updateAdvert(ctx *gin.Context) {
+	authUser := ctx.MustGet("authorization").(*mapper.UserViewModel)
+	if err := authUser.Validator(); err != nil {
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, struct {
+			Error string `json:"error"`
+		}{
+			Error: mapper.ErrorNonValidData.Error(),
+		})
+		return
+	}
+	//
 	viewModel := new(mapper.UpdateAdvertViewModel)
 	jsonForm := ctx.PostForm("json")
 	if jsonForm != "" {
@@ -219,15 +243,20 @@ func (a *apiHttpHandler) updateAdvert(ctx *gin.Context) {
 }
 
 func (a *apiHttpHandler) userAdverts(ctx *gin.Context) {
-	viewModel := new(mapper.IdentifierOwnerViewModel)
-	if err := ctx.BindJSON(viewModel); err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, struct {
+	authUser := ctx.MustGet("authorization").(*mapper.UserViewModel)
+	if err := authUser.Validator(); err != nil {
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, struct {
 			Error string `json:"error"`
 		}{
 			Error: mapper.ErrorNonValidData.Error(),
 		})
 		return
 	}
+	//
+	viewModel := new(mapper.IdentifierOwnerViewModel)
+	viewModel.AdOwnerName = authUser.Name
+	viewModel.AdOwnerID = authUser.UserID
+	//
 	list, err := application.advertService.ListMyAdverts(
 		viewModel,
 		application.advertPostgresRepository,
@@ -246,6 +275,16 @@ func (a *apiHttpHandler) userAdverts(ctx *gin.Context) {
 }
 
 func (a *apiHttpHandler) refreshAdvert(ctx *gin.Context) {
+	authUser := ctx.MustGet("authorization").(*mapper.UserViewModel)
+	if err := authUser.Validator(); err != nil {
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, struct {
+			Error string `json:"error"`
+		}{
+			Error: mapper.ErrorNonValidData.Error(),
+		})
+		return
+	}
+	//
 	viewModel := new(mapper.IdentifierAdvertViewModel)
 	if err := ctx.BindJSON(viewModel); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, struct {
@@ -273,6 +312,16 @@ func (a *apiHttpHandler) refreshAdvert(ctx *gin.Context) {
 }
 
 func (a *apiHttpHandler) closeAdvert(ctx *gin.Context) {
+	authUser := ctx.MustGet("authorization").(*mapper.UserViewModel)
+	if err := authUser.Validator(); err != nil {
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, struct {
+			Error string `json:"error"`
+		}{
+			Error: mapper.ErrorNonValidData.Error(),
+		})
+		return
+	}
+	//
 	viewModel := new(mapper.IdentifierAdvertViewModel)
 	if err := ctx.BindJSON(viewModel); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, struct {
