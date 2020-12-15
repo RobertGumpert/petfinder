@@ -21,7 +21,7 @@ func newApiHttpHandler() *apiHttpHandler {
 	return &apiHttpHandler{}
 }
 
-func (a *apiHttpHandler) getServer() func() {
+func (a *apiHttpHandler) getServer() (*gin.Engine, func()) {
 	port := application.configs["app"].GetString("port")
 	if !strings.Contains(port, ":") {
 		port = strings.Join([]string{":", port}, "")
@@ -55,7 +55,7 @@ func (a *apiHttpHandler) getServer() func() {
 			getting.POST("", a.get)
 		}
 	}
-	return func() {
+	return engine, func() {
 		err := engine.Run(port)
 		if err != nil {
 			log.Println(err)
@@ -181,6 +181,7 @@ func (a *apiHttpHandler) isAuthorized(ctx *gin.Context) {
 		application.userPostgresRepository,
 		nil,
 	)
+
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, struct {
 			Error string `json:"error"`
@@ -195,7 +196,6 @@ func (a *apiHttpHandler) isAuthorized(ctx *gin.Context) {
 func (a *apiHttpHandler) updateAccessToken(ctx *gin.Context) {
 	token := ctx.MustGet("authorization").(string)
 	viewModel := new(mapper.NewAccessTokenViewModel)
-	viewModel.Access = token
 	if err := ctx.BindJSON(viewModel); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, struct {
 			Error string `json:"error"`
@@ -204,6 +204,7 @@ func (a *apiHttpHandler) updateAccessToken(ctx *gin.Context) {
 		})
 		return
 	}
+	viewModel.Access = token
 	access, response, err := application.userService.UpdateAccessToken(
 		viewModel,
 		application.userPostgresRepository,

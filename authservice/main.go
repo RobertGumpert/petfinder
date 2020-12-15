@@ -2,37 +2,21 @@ package main
 
 import (
 	"authservice/app"
-	"authservice/pckg/runtimeinfo"
-	"github.com/spf13/viper"
-	"log"
+	"authservice/pckg/conf"
 	"path"
 	"runtime"
 )
 
 var root string
 
-func readConfigs(files ...string) map[string]*viper.Viper {
+func main() {
 	_, file, _, _ := runtime.Caller(0)
 	root = path.Dir(file)
-	configs := make(map[string]*viper.Viper)
-	var read = func(name string) *viper.Viper {
-		vpr := viper.New()
-		vpr.SetConfigFile(root + "/" + name + ".yaml")
-		if err := vpr.ReadInConfig(); err != nil {
-			log.Fatal(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
-		}
-		return vpr
-	}
-	for _, file := range files {
-		configs[file] = read(file)
-	}
-	return configs
-}
-
-func main() {
-	configs := readConfigs(
+	configs := conf.ReadConfigs(
+		root,
 		"app",
 		"event_receivers",
 	)
-	app.NewApp(configs, root)
+	application := app.NewApp(configs)
+	application.HttpServerRun()
 }

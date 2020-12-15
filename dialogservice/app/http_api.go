@@ -16,7 +16,7 @@ func newApiHttpHandler() *apiHttpHandler {
 	return &apiHttpHandler{}
 }
 
-func (a *apiHttpHandler) getServer() func() {
+func (a *apiHttpHandler) getServer() (*gin.Engine, func()) {
 	port := application.configs["app"].GetString("port")
 	if !strings.Contains(port, ":") {
 		port = strings.Join([]string{":", port}, "")
@@ -35,7 +35,7 @@ func (a *apiHttpHandler) getServer() func() {
 			messages.POST("/batching/next", a.downloadNextMessagesBatch)
 		}
 	}
-	return func() {
+	return engine, func() {
 		err := engine.Run(port)
 		if err != nil {
 			log.Println(err)

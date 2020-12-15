@@ -3,12 +3,12 @@ package app
 import (
 	"authservice/repository"
 	"authservice/service"
+	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 	"time"
 )
 
 var (
-	root string
 	application             *Application
 	applicationHttpApi      *apiHttpHandler
 	applicationHttpRequests *httpRequests
@@ -18,10 +18,11 @@ type Application struct {
 	configs                map[string]*viper.Viper
 	userPostgresRepository repository.UserRepository
 	userService            *service.User
+	HttpAPI                *gin.Engine
+	HttpServerRun          func()
 }
 
-func NewApp(configs map[string]*viper.Viper, rootDir string) *Application {
-	root = rootDir
+func NewApp(configs map[string]*viper.Viper) *Application {
 	application = new(Application)
 	application.configs = configs
 	application.userPostgresRepository = repository.NewUserGormRepository(postgresInit(true))
@@ -33,10 +34,27 @@ func NewApp(configs map[string]*viper.Viper, rootDir string) *Application {
 	)
 	//
 	applicationHttpApi = newApiHttpHandler()
-	httpServerRun := applicationHttpApi.getServer()
-	//
+	ginEngine, httpServerRun := applicationHttpApi.getServer()
+	application.HttpAPI = ginEngine
+	application.HttpServerRun = httpServerRun
 	applicationHttpRequests = newHttpRequests()
 	//
-	httpServerRun()
+	return application
+}
+
+
+func newTestApp(configs map[string]*viper.Viper, us *service.User, db repository.UserRepository) *Application {
+	application = new(Application)
+	application.configs = configs
+	//
+	application.userPostgresRepository = db
+	application.userService = us
+	//
+	applicationHttpApi = newApiHttpHandler()
+	ginEngine, httpServerRun := applicationHttpApi.getServer()
+	application.HttpAPI = ginEngine
+	application.HttpServerRun = httpServerRun
+	applicationHttpRequests = newHttpRequests()
+	//
 	return application
 }

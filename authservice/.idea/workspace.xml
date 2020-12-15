@@ -2,13 +2,20 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3c068240-97f9-427c-adc3-c3626817d406" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../advertservice/readme.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../advertservice/advertservice.exe" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../advertservice/app/http_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/../advertservice/app/http_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../advertservice/app/http_requests.go" beforeDir="false" afterPath="$PROJECT_DIR$/../advertservice/app/http_requests.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../advertservice/mapper/mapper.go" beforeDir="false" afterPath="$PROJECT_DIR$/../advertservice/mapper/mapper.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../advertservice/service/advert_service.go" beforeDir="false" afterPath="$PROJECT_DIR$/../advertservice/service/advert_service.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pckg/conf/reader.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dialogservice/app/app_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dialogservice/pckg/conf/reader.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fileservice/writer_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/application.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/application.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/http_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/http_api.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/authservice.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dialogservice/app/application.go" beforeDir="false" afterPath="$PROJECT_DIR$/../dialogservice/app/application.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dialogservice/app/http_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/../dialogservice/app/http_api.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dialogservice/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/../dialogservice/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fileservice/reader_test.go" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../mailerservice/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../mailerservice/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -40,7 +47,7 @@
     <property name="go.import.settings.migrated" value="true" />
     <property name="go.sdk.automatically.set" value="true" />
     <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../mailerservice" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../dialogservice" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -60,7 +67,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Go Build.go build authservice">
+  <component name="RunManager" selected="Go Test.TestResetPassword in authservice/app">
     <configuration name="go build authservice" type="GoApplicationRunConfiguration" factoryName="Go Application" nameIsGenerated="true">
       <module name="authservice" />
       <working_directory value="$PROJECT_DIR$" />
@@ -69,32 +76,68 @@
       <package value="authservice" />
       <method v="2" />
     </configuration>
-    <configuration name="TestAuthorizedFlow in authservice/service/test" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="TestAuthorizedFlow in authservice/app" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="authservice" />
-      <working_directory value="$PROJECT_DIR$/service/test" />
+      <working_directory value="$PROJECT_DIR$/app" />
       <framework value="gotest" />
       <kind value="PACKAGE" />
-      <package value="authservice/service/test" />
+      <package value="authservice/app" />
       <directory value="$PROJECT_DIR$/" />
       <filePath value="$PROJECT_DIR$/" />
       <pattern value="^TestAuthorizedFlow$" />
       <method v="2" />
     </configuration>
-    <configuration name="TestRegisterFlow in authservice/service/test" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="TestGetResetPassword in authservice/app" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="authservice" />
-      <working_directory value="$PROJECT_DIR$/service/test" />
+      <working_directory value="$PROJECT_DIR$/app" />
       <framework value="gotest" />
       <kind value="PACKAGE" />
-      <package value="authservice/service/test" />
+      <package value="authservice/app" />
+      <directory value="$PROJECT_DIR$/" />
+      <filePath value="$PROJECT_DIR$/" />
+      <pattern value="^TestGetResetPassword$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestRegisterFlow in authservice/app" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="authservice" />
+      <working_directory value="$PROJECT_DIR$/app" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="authservice/app" />
       <directory value="$PROJECT_DIR$/" />
       <filePath value="$PROJECT_DIR$/" />
       <pattern value="^TestRegisterFlow$" />
       <method v="2" />
     </configuration>
+    <configuration name="TestResetPassword in authservice/app" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="authservice" />
+      <working_directory value="$PROJECT_DIR$/app" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="authservice/app" />
+      <directory value="$PROJECT_DIR$/" />
+      <filePath value="$PROJECT_DIR$/" />
+      <pattern value="^TestResetPassword$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestUpdateUserFlow in authservice/app" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="authservice" />
+      <working_directory value="$PROJECT_DIR$/app" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="authservice/app" />
+      <directory value="$PROJECT_DIR$/" />
+      <filePath value="$PROJECT_DIR$/" />
+      <pattern value="^TestUpdateUserFlow$" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Go Test.TestAuthorizedFlow in authservice/service/test" />
-        <item itemvalue="Go Test.TestRegisterFlow in authservice/service/test" />
+        <item itemvalue="Go Test.TestResetPassword in authservice/app" />
+        <item itemvalue="Go Test.TestGetResetPassword in authservice/app" />
+        <item itemvalue="Go Test.TestUpdateUserFlow in authservice/app" />
+        <item itemvalue="Go Test.TestAuthorizedFlow in authservice/app" />
+        <item itemvalue="Go Test.TestRegisterFlow in authservice/app" />
       </list>
     </recent_temporary>
   </component>
@@ -122,39 +165,29 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/mapper/mapper.go</url>
-          <line>97</line>
-          <option name="timeStamp" value="7" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/service/test/user_service_test.go</url>
           <line>77</line>
           <option name="timeStamp" value="11" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/app/http_api.go</url>
-          <line>243</line>
+          <line>244</line>
           <option name="timeStamp" value="16" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/app/http_api.go</url>
-          <line>137</line>
-          <option name="timeStamp" value="18" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/service/user_service.go</url>
-          <line>150</line>
-          <option name="timeStamp" value="20" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/service/user_service.go</url>
-          <line>185</line>
-          <option name="timeStamp" value="21" />
+          <line>271</line>
+          <option name="timeStamp" value="22" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/app/http_api.go</url>
-          <line>270</line>
-          <option name="timeStamp" value="22" />
+          <line>196</line>
+          <option name="timeStamp" value="33" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/app/http_api.go</url>
+          <line>175</line>
+          <option name="timeStamp" value="36" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

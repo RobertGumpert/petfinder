@@ -2,14 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="924782c9-f2ee-46ed-a430-76fec41783a2" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../advertservice/readme.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../advertservice/advertservice.exe" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../advertservice/app/http_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/../advertservice/app/http_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../advertservice/app/http_requests.go" beforeDir="false" afterPath="$PROJECT_DIR$/../advertservice/app/http_requests.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../advertservice/mapper/mapper.go" beforeDir="false" afterPath="$PROJECT_DIR$/../advertservice/mapper/mapper.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../advertservice/service/advert_service.go" beforeDir="false" afterPath="$PROJECT_DIR$/../advertservice/service/advert_service.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../authservice/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../authservice/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
