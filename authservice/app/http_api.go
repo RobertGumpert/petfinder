@@ -34,7 +34,7 @@ func (a *apiHttpHandler) getServer() (*gin.Engine, func()) {
 
 		auth := api.Group("/access", a.middlewareAccessToken)
 		{
-			auth.POST("", a.isAuthorized)
+			auth.GET("", a.isAuthorized)
 			auth.POST("/update", a.updateAccessToken)
 		}
 

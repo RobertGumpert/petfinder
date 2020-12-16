@@ -100,7 +100,7 @@ Status: 400, получен неправильный json
 
 REQUEST:
 
-POST: /api/user/access
+GET: /api/user/access
 
 HEADER:
 

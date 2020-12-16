@@ -30,7 +30,7 @@ func (a *apiHttpHandler) getServer() (*gin.Engine, func()) {
 		{
 			middleware.POST("/add", a.addAdvert)
 			middleware.POST("/update", a.updateAdvert)
-			middleware.POST("/list", a.userAdverts)
+			middleware.GET("/list", a.userAdverts)
 			middleware.POST("/close", a.closeAdvert)
 			middleware.POST("/refresh", a.refreshAdvert)
 		}

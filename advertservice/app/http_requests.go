@@ -30,7 +30,7 @@ func (h *httpRequests) isAuthorized(token string) (*mapper.UserViewModel, error)
 		"/api/user/access",
 	}, "")
 	client := http.Client{}
-	req, err := http.NewRequest("POST", url, nil)
+	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 		return nil, err

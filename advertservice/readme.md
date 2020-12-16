@@ -121,7 +121,7 @@ Status: 200
 
 REQUEST:
 
-POST: /api/advert/user/list
+GET: /api/advert/user/list
 
 HEADER:
 
@@ -328,7 +328,7 @@ Status: 200
 
 REQUEST:
 
-POST: /api/advert/user/list
+GET: /api/advert/user/list
 
 HEADER:
 
