@@ -190,16 +190,12 @@ type AuthorizationUserViewModel struct {
 }
 
 func (m *AuthorizationUserViewModel) Validator() error {
-	if m.UserID == 0 {
-		return ErrorNonValidData
-	}
-	email := strings.TrimSpace(m.Email)
 	telephone := strings.TrimSpace(m.Telephone)
 	password := strings.TrimSpace(m.Password)
-	if email == "" || telephone == "" || password == "" {
+	if telephone == "" || password == "" {
 		return ErrorNonValidData
 	}
-	if !regularexp.EmailValid(email) || !regularexp.TelephoneValid(telephone) {
+	if !regularexp.TelephoneValid(telephone) {
 		return ErrorNonValidData
 	}
 	return nil

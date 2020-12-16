@@ -56,10 +56,8 @@ Body raw:
    
  ```json
 {
-    "user_id" : 66,
     "telephone" : "8-953-983-0807",
-    "password" : "toster123",
-    "email" : "walkmanmail19@gmail.com"
+    "password" : "toster123"
 }
 ```
 

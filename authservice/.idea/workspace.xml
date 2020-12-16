@@ -2,16 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3c068240-97f9-427c-adc3-c3626817d406" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../advertservice/app/app_test.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../advertservice/pckg/conf/reader.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../advertservice/app/application.go" beforeDir="false" afterPath="$PROJECT_DIR$/../advertservice/app/application.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../advertservice/app/http_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/../advertservice/app/http_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../advertservice/entity/test/gorm_migration_test.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../advertservice/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/../advertservice/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../advertservice/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/../advertservice/readme.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dialogservice/app/app_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/../dialogservice/app/app_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dialogservice/app/application.go" beforeDir="false" afterPath="$PROJECT_DIR$/../dialogservice/app/application.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mapper/mapper.go" beforeDir="false" afterPath="$PROJECT_DIR$/mapper/mapper.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -62,7 +55,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Go Test.TestResetPassword in authservice/app">
+  <component name="RunManager" selected="Go Build.go build authservice">
     <configuration name="go build authservice" type="GoApplicationRunConfiguration" factoryName="Go Application" nameIsGenerated="true">
       <module name="authservice" />
       <working_directory value="$PROJECT_DIR$" />
@@ -165,24 +158,9 @@
           <option name="timeStamp" value="11" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/app/http_api.go</url>
-          <line>244</line>
-          <option name="timeStamp" value="16" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/app/http_api.go</url>
-          <line>271</line>
-          <option name="timeStamp" value="22" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/app/http_api.go</url>
-          <line>196</line>
-          <option name="timeStamp" value="33" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/app/http_api.go</url>
-          <line>175</line>
-          <option name="timeStamp" value="36" />
+          <url>file://$PROJECT_DIR$/service/user_service.go</url>
+          <line>61</line>
+          <option name="timeStamp" value="37" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
