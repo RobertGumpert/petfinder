@@ -4,6 +4,7 @@ import (
 	"advertservice/mapper"
 	"advertservice/repository"
 	"advertservice/service"
+	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 )
 
@@ -18,6 +19,8 @@ type Application struct {
 	advertPostgresRepository  repository.AdvertRepository
 	advertPostgresSearchModel repository.SearchModel
 	advertService             *service.AdvertService
+	HttpAPI                   *gin.Engine
+	HttpServerRun             func()
 }
 
 func NewApp(configs map[string]*viper.Viper) *Application {
@@ -25,7 +28,11 @@ func NewApp(configs map[string]*viper.Viper) *Application {
 	application.configs = configs
 	postgres := postgresInit(true)
 	application.advertPostgresRepository = repository.NewGormAdvertRepository(postgres)
-	application.advertPostgresSearchModel = repository.NewGormSquareSearchModel(postgres, mapper.CompareAdvertTime, mapper.OneKilometerScale)
+	application.advertPostgresSearchModel = repository.NewGormSquareSearchModel(
+		postgres,
+		mapper.CompareAdvertTime,
+		mapper.OneKilometerScale,
+	)
 	application.advertService = service.NewAdvertService(
 		mapper.LifetimeOfFoundAnimalAdvert,
 		mapper.LifetimeOfLostAnimalAdvert,
@@ -33,10 +40,27 @@ func NewApp(configs map[string]*viper.Viper) *Application {
 	)
 	//
 	applicationHttpApi = newApiHttpHandler()
-	httpServerRun := applicationHttpApi.getServer()
-	//
+	ginEngine, httpServerRun := applicationHttpApi.getServer()
+	application.HttpAPI = ginEngine
+	application.HttpServerRun = httpServerRun
 	applicationHttpRequests = newHttpRequests()
 	//
-	httpServerRun()
+	return application
+}
+
+func newTestApp(configs map[string]*viper.Viper, as *service.AdvertService, db repository.AdvertRepository, sm repository.SearchModel) *Application {
+	application = new(Application)
+	application.configs = configs
+	//
+	application.advertPostgresRepository = db
+	application.advertPostgresSearchModel = sm
+	application.advertService = as
+	//
+	applicationHttpApi = newApiHttpHandler()
+	ginEngine, httpServerRun := applicationHttpApi.getServer()
+	application.HttpAPI = ginEngine
+	application.HttpServerRun = httpServerRun
+	applicationHttpRequests = newHttpRequests()
+	//
 	return application
 }

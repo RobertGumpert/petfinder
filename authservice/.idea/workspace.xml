@@ -2,21 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3c068240-97f9-427c-adc3-c3626817d406" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/app/app_test.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pckg/conf/reader.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../dialogservice/app/app_test.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../dialogservice/pckg/conf/reader.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fileservice/writer_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../advertservice/app/app_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../advertservice/pckg/conf/reader.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../advertservice/app/application.go" beforeDir="false" afterPath="$PROJECT_DIR$/../advertservice/app/application.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../advertservice/app/http_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/../advertservice/app/http_api.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../advertservice/entity/test/gorm_migration_test.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../advertservice/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/../advertservice/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../advertservice/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/../advertservice/readme.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/application.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/application.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/http_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/http_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/authservice.exe" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dialogservice/app/app_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/../dialogservice/app/app_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../dialogservice/app/application.go" beforeDir="false" afterPath="$PROJECT_DIR$/../dialogservice/app/application.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dialogservice/app/http_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/../dialogservice/app/http_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../dialogservice/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/../dialogservice/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fileservice/reader_test.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../mailerservice/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../mailerservice/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

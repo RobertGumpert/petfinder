@@ -17,8 +17,8 @@ type Application struct {
 	configs                     map[string]*viper.Viper
 	dialogAPIPostgresRepository repository.DialogRepositoryAPI
 	dialogServiceAPI            *service.DialogServiceAPI
-	HttpAPI                *gin.Engine
-	HttpServerRun          func()
+	HttpAPI                     *gin.Engine
+	HttpServerRun               func()
 }
 
 func NewApp(configs map[string]*viper.Viper) *Application {

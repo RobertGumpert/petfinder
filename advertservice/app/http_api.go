@@ -18,7 +18,7 @@ func newApiHttpHandler() *apiHttpHandler {
 	return &apiHttpHandler{}
 }
 
-func (a *apiHttpHandler) getServer() func() {
+func (a *apiHttpHandler) getServer() (*gin.Engine, func()) {
 	port := application.configs["app"].GetString("port")
 	if !strings.Contains(port, ":") {
 		port = strings.Join([]string{":", port}, "")
@@ -46,7 +46,7 @@ func (a *apiHttpHandler) getServer() func() {
 			userEvents.POST("/update/name", a.updateUser)
 		}
 	}
-	return func() {
+	return engine, func() {
 		err := engine.Run(port)
 		if err != nil {
 			log.Println(err)
@@ -105,8 +105,6 @@ func (a *apiHttpHandler) addAdvert(ctx *gin.Context) {
 	}
 	//
 	viewModel := new(mapper.CreateAdvertViewModel)
-	viewModel.AdOwnerID = authUser.UserID
-	viewModel.AdOwnerName = authUser.Name
 	//
 	jsonForm := ctx.PostForm("json")
 	if jsonForm != "" {
@@ -127,6 +125,8 @@ func (a *apiHttpHandler) addAdvert(ctx *gin.Context) {
 		})
 		return
 	}
+	viewModel.AdOwnerID = authUser.UserID
+	viewModel.AdOwnerName = authUser.Name
 	response, err := application.advertService.CreateAdvert(viewModel, application.advertPostgresRepository, nil)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, struct {
