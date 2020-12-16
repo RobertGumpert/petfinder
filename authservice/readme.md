@@ -161,7 +161,7 @@ Status: 500, некорректный токен.
 
 REQUEST:
 
-POST: /api/user/update
+POST: /api/user/access/update
 
 HEADER:
 
