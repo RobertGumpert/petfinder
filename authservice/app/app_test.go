@@ -83,6 +83,17 @@ func postJSON(srv *httptest.Server, endPoint string, body interface{}) (*http.Re
 	return res, err
 }
 
+func getToken(srv *httptest.Server, endPoint, token string) (*http.Response, error) {
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s%s", srv.URL, endPoint), nil)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Authorization", "Bearer "+token)
+	client := http.Client{}
+	res, err := client.Do(req)
+	return res, err
+}
+
 func postJSONToken(srv *httptest.Server, endPoint, token string, body interface{}) (*http.Response, error) {
 	req, err := http.NewRequest("POST", fmt.Sprintf("%s%s", srv.URL, endPoint), structToIO(body))
 	if err != nil {
@@ -171,7 +182,7 @@ func TestAuthorizedFlow(t *testing.T) {
 	//
 	//
 	authUser := &mapper.AuthorizationUserViewModel{
-		UserID:    69,
+		UserID:    74,
 		Telephone: "8-000-000-0000",
 		Password:  "test",
 		Email:     "test@mail.ru",
@@ -230,13 +241,10 @@ func TestAuthorizedFlow(t *testing.T) {
 	//
 	//
 	//
-	res, err = postJSONToken(
+	res, err = getToken(
 		srv,
 		"/api/user/access",
 		accessToken,
-		&mapper.IsAuthorizedViewModel{
-			Access: viewModel.Token,
-		},
 	)
 	if err != nil {
 		t.Fatal(err)
@@ -251,15 +259,11 @@ func TestAuthorizedFlow(t *testing.T) {
 	//
 	//
 	//
-	res, err = postJSONToken(
+	res, err = getToken(
 		srv,
 		"/api/user/access/update",
 		accessToken,
-		&mapper.NewAccessTokenViewModel{
-			UserID:    viewModel.User.UserID,
-			Telephone: viewModel.User.Telephone,
-			Email:     viewModel.User.Email,
-		})
+	)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -299,8 +303,8 @@ func TestUpdateUserFlow(t *testing.T) {
 	//
 	//
 	updateUser := &mapper.UpdateUserViewModel{
-		UserID:    69,
-		Name:      "Test Vlad",
+		UserID: 69,
+		Name:   "Test Vlad",
 	}
 	oldAccessToken := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImZpcnN0IjoiOC05NTMtOTgzLTA4MDciLCJzZWNvbmQiOiLQktC70LDQtCDQmtGD0LfQvdC10YbQvtCyIn0sImV4cCI6MTgyODYzMzY3OH0.VefsviYJ_0lRBlzcK_Hj9XhXk5-Tq40Omkmnja6vQ8U"
 	res, err := postJSONToken(
@@ -336,13 +340,10 @@ func TestUpdateUserFlow(t *testing.T) {
 	//
 	//
 	//
-	res, err = postJSONToken(
+	res, err = getToken(
 		srv,
 		"/api/user/access",
 		newAccessToken,
-		&mapper.IsAuthorizedViewModel{
-			Access: newAccessToken,
-		},
 	)
 	if err != nil {
 		t.Fatal(err)
@@ -363,7 +364,6 @@ func TestUpdateUserFlow(t *testing.T) {
 	}
 }
 
-
 func TestGetResetPassword(t *testing.T) {
 	initFields()
 	srv := httptest.NewServer(testApplication.HttpAPI)
@@ -372,8 +372,8 @@ func TestGetResetPassword(t *testing.T) {
 	//
 	//
 	updateUser := &mapper.ResetPasswordViewModel{
-		Email:      "walkmanmail19@gmail.com",
-		Telephone:  "8-999-999-9999",
+		Email:     "walkmanmail19@gmail.com",
+		Telephone: "8-999-999-9999",
 	}
 	oldAccessToken := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImZpcnN0IjoiOC05NTMtOTgzLTA4MDciLCJzZWNvbmQiOiLQktC70LDQtCDQmtGD0LfQvdC10YbQvtCyIn0sImV4cCI6MTgyODYzMzY3OH0.VefsviYJ_0lRBlzcK_Hj9XhXk5-Tq40Omkmnja6vQ8U"
 	res, err := postJSONToken(
@@ -405,10 +405,10 @@ func TestResetPassword(t *testing.T) {
 	//
 	//
 	updateUser := &mapper.ResetPasswordViewModel{
-		ResetToken:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImZpcnN0IjoiT0MwNU9Ua3RPVGs1TFRrNU9Uaz0iLCJzZWNvbmQiOiJ0b3N0ZXIxMjMifSwiZXhwIjoxNjA4MDU5MTgxfQ.TpLGN890ULFMyaJdK2ic5WxTivBkHofcZp_Pnd2SCUM",
+		ResetToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImZpcnN0IjoiT0MwNU9Ua3RPVGs1TFRrNU9Uaz0iLCJzZWNvbmQiOiJ0b3N0ZXIxMjMifSwiZXhwIjoxNjA4MDU5MTgxfQ.TpLGN890ULFMyaJdK2ic5WxTivBkHofcZp_Pnd2SCUM",
 		Email:      "walkmanmail19@gmail.com",
 		Telephone:  "8-999-999-9999",
-		Password: "toster1234567",
+		Password:   "toster1234567",
 	}
 	oldAccessToken := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImZpcnN0IjoiOC05NTMtOTgzLTA4MDciLCJzZWNvbmQiOiLQktC70LDQtCDQmtGD0LfQvdC10YbQvtCyIn0sImV4cCI6MTgyODYzMzY3OH0.VefsviYJ_0lRBlzcK_Hj9XhXk5-Tq40Omkmnja6vQ8U"
 	res, err := postJSONToken(
@@ -440,13 +440,10 @@ func TestResetPassword(t *testing.T) {
 	//
 	//
 	//
-	res, err = postJSONToken(
+	res, err = getToken(
 		srv,
 		"/api/user/access",
 		viewModel.Token,
-		&mapper.IsAuthorizedViewModel{
-			Access: viewModel.Token,
-		},
 	)
 	if err != nil {
 		t.Fatal(err)

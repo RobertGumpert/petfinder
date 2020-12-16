@@ -161,22 +161,12 @@ Status: 500, некорректный токен.
 
 REQUEST:
 
-POST: /api/user/access/update
+GET: /api/user/access/update
 
 HEADER:
 
 ```
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImZpcnN0IjoiOC05NTMtOTgzLTA4MDciLCJzZWNvbmQiOiJWbGFkIn0sImV4cCI6MTYwNzg3OTI4M30.i4WpzufRWSuFLhJ-q5nuBQjm2T7YSjoqFE771-tHVuc
-```
-
-Body: raw
-
-```json
-{
-    "user_id":66,
-    "telephone" : "8-953-983-0807",
-    "email" : "walkmanmail19@gmail.com"
-}
 ```
 
 RESPONSE:

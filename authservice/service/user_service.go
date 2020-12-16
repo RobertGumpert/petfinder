@@ -152,7 +152,7 @@ func (u *User) UpdateAccessToken(inputViewModel *mapper.NewAccessTokenViewModel,
 	if err == nil {
 		return "", nil, mapper.ErrorNonValidAccessToken
 	}
-	userEntity, err := db.EntityGet(inputViewModel.Mapper(), ctx)
+	userEntity, err := db.EntityGet(inputViewModel.Mapper(accessPayload), ctx)
 	if err != nil {
 		go log.Println(runtimeinfo.Runtime(1), "; ERROR=[user not found ", err, "]")
 		return "", nil, mapper.ErrorNonExistUser

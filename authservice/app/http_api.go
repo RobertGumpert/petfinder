@@ -35,7 +35,7 @@ func (a *apiHttpHandler) getServer() (*gin.Engine, func()) {
 		auth := api.Group("/access", a.middlewareAccessToken)
 		{
 			auth.GET("", a.isAuthorized)
-			auth.POST("/update", a.updateAccessToken)
+			auth.GET("/update", a.updateAccessToken)
 		}
 
 		passReset := api.Group("/password", a.middlewareAccessToken)
@@ -196,14 +196,6 @@ func (a *apiHttpHandler) isAuthorized(ctx *gin.Context) {
 func (a *apiHttpHandler) updateAccessToken(ctx *gin.Context) {
 	token := ctx.MustGet("authorization").(string)
 	viewModel := new(mapper.NewAccessTokenViewModel)
-	if err := ctx.BindJSON(viewModel); err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, struct {
-			Error string `json:"error"`
-		}{
-			Error: mapper.ErrorNonValidData.Error(),
-		})
-		return
-	}
 	viewModel.Access = token
 	access, response, err := application.userService.UpdateAccessToken(
 		viewModel,

@@ -2,6 +2,7 @@ package mapper
 
 import (
 	"authservice/entity"
+	"authservice/pckg/jwtoken"
 	"authservice/pckg/regularexp"
 	"strings"
 )
@@ -267,25 +268,16 @@ type NewAccessTokenViewModel struct {
 }
 
 func (m *NewAccessTokenViewModel) Validator() error {
-	if m.UserID == 0 {
-		return ErrorNonValidData
-	}
 	token := strings.TrimSpace(m.Access)
-	email := strings.TrimSpace(m.Email)
-	telephone := strings.TrimSpace(m.Telephone)
-	if email == "" || telephone == "" || token == "" {
-		return ErrorNonValidData
-	}
-	if !regularexp.EmailValid(email) || !regularexp.TelephoneValid(telephone) {
+	if token == "" {
 		return ErrorNonValidData
 	}
 	return nil
 }
 
-func (m *NewAccessTokenViewModel) Mapper() *entity.User {
+func (m *NewAccessTokenViewModel) Mapper(payload *jwtoken.Payload) *entity.User {
 	return &entity.User{
-		UserID:    m.UserID,
-		Telephone: m.Telephone,
-		Email:     m.Email,
+		Telephone: payload.FieldFirst,
+		Name:      payload.FieldSecond,
 	}
 }
