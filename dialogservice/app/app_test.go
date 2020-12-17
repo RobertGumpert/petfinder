@@ -22,16 +22,16 @@ import (
 
 var (
 	secondUser = &mapper.UserViewModel{
-		UserID: 68,
+		UserID: 77,
 		Name:   "Danil",
 	}
-	secondUserToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImZpcnN0IjoiOC05OTktOTk5LTk5OTkiLCJzZWNvbmQiOiJEYW5pbCJ9LCJleHAiOjE2MDgxNjU0NTd9.-ZDoUpf5Om8jhJXSAHyPBhrpJQkyi8x4XlCR9Il3ae4"
+	secondUserToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImZpcnN0IjoiOC05OTktOTk5LTk5OTkiLCJzZWNvbmQiOiJEYW5pbCJ9LCJleHAiOjE4Mjg5NDg3OTN9.jGU42jklINwz-W2jXyOwxjSqcnw1z-ygOIHS16uQsgo"
 	//
 	firstUser = &mapper.UserViewModel{
-		UserID: 66,
-		Name:   "Влад Кузнецов",
+		UserID: 76,
+		Name:   "Vlad",
 	}
-	firstUserToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImZpcnN0IjoiOC05NTMtOTgzLTA4MDciLCJzZWNvbmQiOiLQktC70LDQtCDQmtGD0LfQvdC10YbQvtCyIn0sImV4cCI6MTgyODYzMzY3OH0.VefsviYJ_0lRBlzcK_Hj9XhXk5-Tq40Omkmnja6vQ8U"
+	firstUserToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImZpcnN0IjoiOC05NTMtOTgzLTA4MDciLCJzZWNvbmQiOiJWbGFkIn0sImV4cCI6MTgyODk0ODcwNn0.e3REagO26al63HRHe75p2IokwihLGNW7xu284I5xhbE"
 	//
 	testRoot                = "C:/PetFinderRepos/petfinder/dialogservice"
 	testConfigs             map[string]*viper.Viper
@@ -144,24 +144,27 @@ func TestCreateNewDialogFlow(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if res.StatusCode == http.StatusOK {
+	if res.StatusCode != http.StatusOK {
 		t.Fatal("status not OK")
 	}
 	body, err = ioutil.ReadAll(res.Body)
 	if err != nil {
 		t.Fatal(err)
 	}
-	errViewModel := new(errorResponseViewModel)
-	err = json.Unmarshal(body, errViewModel)
+	duplicateViewModel := new(mapper.CreateNewDialogViewModel)
+	err = json.Unmarshal(body, duplicateViewModel)
 	_ = res.Body.Close()
 	if err != nil {
 		t.Fatal(err)
+	}
+	if duplicateViewModel.ID != viewModel.ID {
+		t.Fatal("ID's isn't compare ")
 	}
 	//
 	//
 	//
 	log.Println(res.StatusCode)
-	log.Println(*errViewModel)
+	log.Println(*duplicateViewModel)
 	//
 	//
 	//

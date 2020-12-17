@@ -2,10 +2,13 @@ package app
 
 import (
 	"advertservice/mapper"
+	"advertservice/pckg/runtimeinfo"
 	"advertservice/repository"
 	"advertservice/service"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
+	"log"
+	"strconv"
 )
 
 var (
@@ -28,10 +31,15 @@ func NewApp(configs map[string]*viper.Viper) *Application {
 	application.configs = configs
 	postgres := postgresInit(true)
 	application.advertPostgresRepository = repository.NewGormAdvertRepository(postgres)
+	radius, err := strconv.ParseFloat(configs["app"].GetString("radius"), 64)
+	if err != nil {
+		radius = float64(1)
+		go log.Println(runtimeinfo.Runtime(1), " ERROR: [", err, "]")
+	}
 	application.advertPostgresSearchModel = repository.NewGormSquareSearchModel(
 		postgres,
 		mapper.CompareAdvertTime,
-		mapper.OneKilometerScale,
+		mapper.OneKilometerScale*radius,
 	)
 	application.advertService = service.NewAdvertService(
 		mapper.LifetimeOfFoundAnimalAdvert,

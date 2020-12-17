@@ -2,11 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3c068240-97f9-427c-adc3-c3626817d406" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../advertservice/advertservice.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../advertservice/app.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../advertservice/app.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../advertservice/app/app_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/../advertservice/app/app_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../advertservice/app/application.go" beforeDir="false" afterPath="$PROJECT_DIR$/../advertservice/app/application.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../advertservice/app/http_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/../advertservice/app/http_api.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/app_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/app_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/http_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/http_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mapper/mapper.go" beforeDir="false" afterPath="$PROJECT_DIR$/mapper/mapper.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/user_service.go" beforeDir="false" afterPath="$PROJECT_DIR$/service/user_service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/authservice.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dialogservice/app/app_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/../dialogservice/app/app_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dialogservice/dialogservice.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dialogservice/repository/gorm_dialog_repository_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/../dialogservice/repository/gorm_dialog_repository_api.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -177,6 +182,11 @@
           <url>file://$PROJECT_DIR$/service/user_service.go</url>
           <line>61</line>
           <option name="timeStamp" value="41" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/app/http_api.go</url>
+          <line>34</line>
+          <option name="timeStamp" value="42" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

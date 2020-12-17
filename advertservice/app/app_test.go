@@ -23,16 +23,16 @@ import (
 var (
 	fileUpload = "C:/PetFinderRepos/petfinder/fileservice/test_jpeg.jpg"
 	secondUser = &mapper.UserViewModel{
-		UserID: 68,
+		UserID: 77,
 		Name:   "Danil",
 	}
-	secondUserToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImZpcnN0IjoiOC05OTktOTk5LTk5OTkiLCJzZWNvbmQiOiJEYW5pbCJ9LCJleHAiOjE2MDgxNjU0NTd9.-ZDoUpf5Om8jhJXSAHyPBhrpJQkyi8x4XlCR9Il3ae4"
+	secondUserToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImZpcnN0IjoiOC05OTktOTk5LTk5OTkiLCJzZWNvbmQiOiJEYW5pbCJ9LCJleHAiOjE4Mjg5NDg3OTN9.jGU42jklINwz-W2jXyOwxjSqcnw1z-ygOIHS16uQsgo"
 	//
 	firstUser = &mapper.UserViewModel{
-		UserID: 66,
-		Name:   "Влад Кузнецов",
+		UserID: 76,
+		Name:   "Vlad",
 	}
-	firstUserToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImZpcnN0IjoiOC05NTMtOTgzLTA4MDciLCJzZWNvbmQiOiLQktC70LDQtCDQmtGD0LfQvdC10YbQvtCyIn0sImV4cCI6MTgyODYzMzY3OH0.VefsviYJ_0lRBlzcK_Hj9XhXk5-Tq40Omkmnja6vQ8U"
+	firstUserToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImZpcnN0IjoiOC05NTMtOTgzLTA4MDciLCJzZWNvbmQiOiJWbGFkIn0sImV4cCI6MTgyODk0ODcwNn0.e3REagO26al63HRHe75p2IokwihLGNW7xu284I5xhbE"
 	//
 	testRoot        = "C:/PetFinderRepos/petfinder/advertservice"
 	testConfigs     map[string]*viper.Viper
@@ -62,7 +62,7 @@ func initFields() {
 	testSearchModel = repository.NewGormSquareSearchModel(
 		testPostgresOrm.DB,
 		mapper.CompareAdvertTime,
-		mapper.OneKilometerScale,
+		mapper.OneKilometerScale * float64(1000000),
 	)
 	testService = service.NewAdvertService(
 		mapper.LifetimeOfFoundAnimalAdvert,
@@ -109,6 +109,17 @@ func postJSONToken(srv *httptest.Server, endPoint, token string, body interface{
 	return res, err
 }
 
+func getToken(srv *httptest.Server, endPoint, token string) (*http.Response, error) {
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s%s", srv.URL, endPoint), nil)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Authorization", "Bearer "+token)
+	client := http.Client{}
+	res, err := client.Do(req)
+	return res, err
+}
+
 func postJSON(srv *httptest.Server, endPoint string, body interface{}) (*http.Response, error) {
 	req, err := http.NewRequest("POST", fmt.Sprintf("%s%s", srv.URL, endPoint), structToIO(body))
 	if err != nil {
@@ -119,7 +130,7 @@ func postJSON(srv *httptest.Server, endPoint string, body interface{}) (*http.Re
 	return res, err
 }
 
-func postJSONTokenFile(srv *httptest.Server, endPoint, token string, body interface{}) (*http.Response, error) {
+func postFormDataJSONFile(srv *httptest.Server, endPoint, token string, body interface{}) (*http.Response, error) {
 	var (
 		requestBuffer bytes.Buffer
 		requestWriter = multipart.NewWriter(&requestBuffer)
@@ -173,6 +184,45 @@ func postJSONTokenFile(srv *httptest.Server, endPoint, token string, body interf
 	return res, err
 }
 
+func postFormDataJSON(srv *httptest.Server, endPoint, token string, body interface{}) (*http.Response, error) {
+	var (
+		requestBuffer bytes.Buffer
+		requestWriter = multipart.NewWriter(&requestBuffer)
+		err           error
+		//
+		jsonWriter io.Writer
+		jsonReader io.Reader = structToIO(body)
+	)
+	//
+	if jsonWriter, err = requestWriter.CreateFormField("json"); err != nil {
+		log.Fatal(err)
+	}
+	if _, err := io.Copy(jsonWriter, jsonReader); err != nil {
+		log.Fatal(err)
+	}
+	err = requestWriter.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
+	//
+	client := http.Client{}
+	req, err := http.NewRequest(
+		"POST",
+		fmt.Sprintf("%s%s", srv.URL, endPoint),
+		&requestBuffer,
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+	req.Header.Set("Content-Type", requestWriter.FormDataContentType())
+	req.Header.Set("Authorization", "Bearer "+token)
+	res, err := client.Do(req)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return res, err
+}
+
 func TestAddAdvertFlow(t *testing.T) {
 	initFields()
 	srv := httptest.NewServer(testApplication.HttpAPI)
@@ -180,7 +230,7 @@ func TestAddAdvertFlow(t *testing.T) {
 	//
 	//
 	//
-	res, err := postJSONTokenFile(
+	res, err := postFormDataJSONFile(
 		srv,
 		"/api/advert/user/add",
 		firstUserToken,
@@ -197,7 +247,7 @@ func TestAddAdvertFlow(t *testing.T) {
 		t.Fatal(err)
 	}
 	if res.StatusCode != http.StatusOK {
-		t.Fatal("status is OK")
+		t.Fatal("status isn't OK")
 	}
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
@@ -216,7 +266,7 @@ func TestAddAdvertFlow(t *testing.T) {
 	//
 	//
 	//
-	res, err = postToken(
+	res, err = getToken(
 		srv,
 		"/api/advert/user/list",
 		firstUserToken,
@@ -225,7 +275,7 @@ func TestAddAdvertFlow(t *testing.T) {
 		t.Fatal(err)
 	}
 	if res.StatusCode != http.StatusOK {
-		t.Fatal("status is OK")
+		t.Fatal("status isn't OK")
 	}
 	body, err = ioutil.ReadAll(res.Body)
 	if err != nil {
@@ -247,7 +297,7 @@ func TestAddAdvertFlow(t *testing.T) {
 	//
 	//
 	//
-	res, err = postJSONTokenFile(
+	res, err = postFormDataJSON(
 		srv,
 		"/api/advert/user/add",
 		secondUserToken,
@@ -283,7 +333,7 @@ func TestAddAdvertFlow(t *testing.T) {
 	//
 	//
 	//
-	res, err = postToken(
+	res, err = getToken(
 		srv,
 		"/api/advert/user/list",
 		secondUserToken,
@@ -470,10 +520,10 @@ func TestSearchInAreaFlow(t *testing.T) {
 		srv,
 		"/api/advert/get/in/area",
 		&mapper.SearchInAreaViewModel{
-			AdOwnerID:     66,
+			AdOwnerID:     76,
 			OnlyNotClosed: true,
-			GeoLongitude:  50.0,
-			GeoLatitude:   50.0,
+			GeoLongitude:  60.0,
+			GeoLatitude:   60.0,
 		},
 	)
 	if err != nil {

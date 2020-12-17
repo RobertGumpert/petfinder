@@ -103,9 +103,7 @@ func (a *apiHttpHandler) addAdvert(ctx *gin.Context) {
 		})
 		return
 	}
-	//
 	viewModel := new(mapper.CreateAdvertViewModel)
-	//
 	jsonForm := ctx.PostForm("json")
 	if jsonForm != "" {
 		err := json.Unmarshal([]byte(jsonForm), viewModel)
@@ -136,36 +134,36 @@ func (a *apiHttpHandler) addAdvert(ctx *gin.Context) {
 		})
 		return
 	}
+	downloadUrl := strings.Join([]string{
+		"http://",
+		application.configs["app"].GetString("file_service"),
+		"/download/advert/id/base",
+	}, "")
 	file, fileHeader, err := ctx.Request.FormFile("file")
-	if err != nil {
-		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, struct {
-			Error string `json:"error"`
-		}{
-			Error: err.Error(),
-		})
-		return
+	if err == nil {
+		_, downloadUrl, err = applicationHttpRequests.saveImage(response.AdID, file, fileHeader)
+		if err != nil {
+			log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
+			ctx.AbortWithStatus(http.StatusNotFound)
+			return
+		}
 	}
-	_, downloadUrl, err := applicationHttpRequests.saveImage(response.AdID, file, fileHeader)
-	if err != nil {
-		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
-		ctx.AbortWithStatus(http.StatusNotFound)
-		return
+	if strings.TrimSpace(downloadUrl) != "" {
+		if err := application.advertService.UpdateImage(
+			&mapper.UpdateImageViewModel{AdID: response.AdID, ImageUrl: downloadUrl},
+			application.advertPostgresRepository,
+			nil,
+		); err != nil {
+			log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, struct {
+				Error string `json:"error"`
+			}{
+				Error: err.Error(),
+			})
+			return
+		}
+		response.ImageUrl = downloadUrl
 	}
-	if err := application.advertService.UpdateImage(
-		&mapper.UpdateImageViewModel{AdID: response.AdID, ImageUrl: downloadUrl},
-		application.advertPostgresRepository,
-		nil,
-	); err != nil {
-		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, struct {
-			Error string `json:"error"`
-		}{
-			Error: err.Error(),
-		})
-		return
-	}
-	response.ImageUrl = downloadUrl
 	ctx.AbortWithStatusJSON(http.StatusOK, response)
 }
 

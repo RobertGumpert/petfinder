@@ -111,10 +111,11 @@ func (d *GormDialogRepositoryAPI) CreateNewDialog(users []*entity.UserEntity, ct
 		existRowByUserName entity.DialogUserEntity
 	)
 	err := d.Where(&entity.DialogUserEntity{UserName: users[0].Name, DialogName: users[1].Name}).First(&existRowByUserName).Error
-	if err != nil {
-		if err != gorm.ErrRecordNotFound {
-			return 0, nil
-		}
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return 0, err
+	}
+	if err == nil {
+		return existRowByUserName.ForeignDialogID, nil
 	}
 	dateCreate := time.Now()
 	newDialog := new(entity.DialogEntity)

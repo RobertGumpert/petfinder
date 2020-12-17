@@ -6,6 +6,7 @@ postgres_password: "toster123"
 postgres_port: "5432"
 postgres_name: "pet_finder_advert"
 postgres_ssl: "disable"
+radius: "1000000"
 
 auth_service: "127.0.0.1:5490"
 mailer_service: "127.0.0.1:4490"
