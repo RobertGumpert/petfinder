@@ -189,7 +189,7 @@ func (m *CreateAdvertViewModel) Mapper() *entity.Advert {
 		AnimalType:   m.AnimalType,
 		AnimalBreed:  m.AnimalBreed,
 		GeoLatitude:  m.GeoLatitude,
-		GeoLongitude: m.GeoLatitude,
+		GeoLongitude: m.GeoLongitude,
 		CommentText:  m.CommentText,
 	}
 }

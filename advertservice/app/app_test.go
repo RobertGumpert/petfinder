@@ -238,8 +238,8 @@ func TestAddAdvertFlow(t *testing.T) {
 			AdType:       uint64(mapper.TypeLost),
 			AnimalType:   "Собака",
 			AnimalBreed:  "Овчарка",
-			GeoLatitude:  50.0001,
-			GeoLongitude: 50.0001,
+			GeoLatitude:  50.0002,
+			GeoLongitude: 48.46464,
 			CommentText:  "Потерялась, помогите найти!",
 		},
 	)
@@ -306,7 +306,7 @@ func TestAddAdvertFlow(t *testing.T) {
 			AnimalType:   "Собака",
 			AnimalBreed:  "Овчарка",
 			GeoLatitude:  50.0002,
-			GeoLongitude: 50.0003,
+			GeoLongitude: 48.46464,
 			CommentText:  "Нашлась овчарка",
 		},
 	)

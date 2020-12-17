@@ -96,6 +96,7 @@ func (a *apiHttpHandler) middlewareAccessToken(ctx *gin.Context) {
 func (a *apiHttpHandler) addAdvert(ctx *gin.Context) {
 	authUser := ctx.MustGet("authorization").(*mapper.UserViewModel)
 	if err := authUser.Validator(); err != nil {
+		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, struct {
 			Error string `json:"error"`
 		}{
@@ -108,6 +109,7 @@ func (a *apiHttpHandler) addAdvert(ctx *gin.Context) {
 	if jsonForm != "" {
 		err := json.Unmarshal([]byte(jsonForm), viewModel)
 		if err != nil {
+			log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 			ctx.AbortWithStatusJSON(http.StatusBadRequest, struct {
 				Error string `json:"error"`
 			}{
@@ -116,6 +118,7 @@ func (a *apiHttpHandler) addAdvert(ctx *gin.Context) {
 			return
 		}
 	} else {
+		log.Println(runtimeinfo.Runtime(1), "; ERROR=[empty json]")
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, struct {
 			Error string `json:"error"`
 		}{
@@ -127,6 +130,7 @@ func (a *apiHttpHandler) addAdvert(ctx *gin.Context) {
 	viewModel.AdOwnerName = authUser.Name
 	response, err := application.advertService.CreateAdvert(viewModel, application.advertPostgresRepository, nil)
 	if err != nil {
+		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, struct {
 			Error string `json:"error"`
 		}{
