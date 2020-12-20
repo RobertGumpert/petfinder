@@ -35,6 +35,7 @@ func (a *apiHttpHandler) getServer() (*gin.Engine, func()) {
 		auth := api.Group("/access", a.middlewareAccessToken)
 		{
 			auth.GET("", a.isAuthorized)
+			auth.GET("/out", a.signOutFromAccount)
 			auth.GET("/update", a.updateAccessToken)
 		}
 
@@ -191,6 +192,26 @@ func (a *apiHttpHandler) isAuthorized(ctx *gin.Context) {
 		return
 	}
 	ctx.AbortWithStatusJSON(http.StatusOK, response)
+}
+
+func (a *apiHttpHandler) signOutFromAccount(ctx *gin.Context) {
+	token := ctx.MustGet("authorization").(string)
+	viewModel := new(mapper.IsAuthorizedViewModel)
+	viewModel.Access = token
+	err := application.userService.SignOutFromAccount(
+		viewModel,
+		application.userPostgresRepository,
+		nil,
+	)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, struct {
+			Error string `json:"error"`
+		}{
+			Error: err.Error(),
+		})
+		return
+	}
+	ctx.AbortWithStatus(http.StatusOK)
 }
 
 func (a *apiHttpHandler) updateAccessToken(ctx *gin.Context) {

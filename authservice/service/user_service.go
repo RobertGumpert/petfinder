@@ -48,16 +48,7 @@ func (u *User) Register(inputViewModel *mapper.RegisterUserViewModel, db reposit
 	return outputViewModel.Mapper(user), nil
 }
 
-// case: польователь не авторизован:
-//   > access токен, который прислал пользователь, просрочен.
-//   > refresh токен в базе пустой.
-//   > refresh токен в базе не пустой, но просрочен.
-//   > payload'ы токенов не совпадают.
-// case: польователь авторизован:
-//   > access токен, который прислал пользователь, не просрочен.
-//   > refresh токен в базе не пустой.
-//   > refresh токен в базе не пустой и не просрочен.
-//   > payload'ы токенов совпадают.
+
 func (u *User) Authorized(inputViewModel *mapper.AuthorizationUserViewModel, db repository.UserRepository, ctx context.Context) (access, refresh string, outputViewModel *mapper.UserViewModel, err error) {
 	access, refresh = "", ""
 	outputViewModel = new(mapper.UserViewModel)
@@ -69,20 +60,19 @@ func (u *User) Authorized(inputViewModel *mapper.AuthorizationUserViewModel, db 
 		go log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 		return access, refresh, outputViewModel, mapper.ErrorNonExistUser
 	}
+	access, refresh, err = u.createAuthorizationTokens(userEntity)
+	if err != nil {
+		go log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
+		return access, refresh, outputViewModel, mapper.ErrorNonValidData
+	}
 	if strings.TrimSpace(userEntity.RefreshToken) != "" {
 		if _, err := u.tokenIsExpire(userEntity.RefreshToken); err != nil {
 			if err := u.updateRefreshToken(userEntity, nil, db, ctx); err != nil {
 				go log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 				return access, refresh, outputViewModel, mapper.ErrorBadDataOperation
 			}
-			return access, refresh, outputViewModel, mapper.ErrorNonValidRefreshToken
 		}
-		return access, refresh, outputViewModel, mapper.ErrorNonValidRefreshToken
-	}
-	access, refresh, err = u.createAuthorizationTokens(userEntity)
-	if err != nil {
-		go log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
-		return access, refresh, outputViewModel, mapper.ErrorNonValidData
+		return access, refresh, outputViewModel.Mapper(userEntity), nil
 	}
 	if err := u.updateRefreshToken(userEntity, refresh, db, ctx); err != nil {
 		go log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
@@ -91,16 +81,6 @@ func (u *User) Authorized(inputViewModel *mapper.AuthorizationUserViewModel, db 
 	return access, refresh, outputViewModel.Mapper(userEntity), nil
 }
 
-// case: польователь не авторизован:
-//   > access токен, который прислал пользователь, просрочен.
-//   > refresh токен в базе пустой.
-//   > refresh токен в базе не пустой, но просрочен.
-//   > payload'ы токенов не совпадают.
-// case: польователь авторизован:
-//   > access токен, который прислал пользователь, не просрочен.
-//   > refresh токен в базе не пустой.
-//   > refresh токен в базе не пустой и не просрочен.
-//   > payload'ы токенов совпадают.
 func (u *User) IsAuthorized(inputViewModel *mapper.IsAuthorizedViewModel, db repository.UserRepository, ctx context.Context) (*mapper.UserViewModel, error) {
 	if err := inputViewModel.Validator(); err != nil {
 		return nil, err
@@ -112,7 +92,7 @@ func (u *User) IsAuthorized(inputViewModel *mapper.IsAuthorizedViewModel, db rep
 	userEntity, err := u.userFromPayload(accessPayload, db, ctx)
 	if err != nil {
 		go log.Println(runtimeinfo.Runtime(1), "; ERROR=[user not found", err, "]")
-		return nil, err
+		return nil, mapper.ErrorNonExistUser
 	}
 	if strings.TrimSpace(userEntity.RefreshToken) == "" {
 		go log.Println(runtimeinfo.Runtime(1), "; ERROR=[user refresh token is empty]")
@@ -134,16 +114,32 @@ func (u *User) IsAuthorized(inputViewModel *mapper.IsAuthorizedViewModel, db rep
 	return new(mapper.UserViewModel).Mapper(userEntity), nil
 }
 
-// case: выдать новый токен:
-//   > access токен, который прислал пользователь, просрочен.
-//   > refresh токен в базе не пустой.
-//   > refresh токен в базе не пустой и не просрочен.
-//   > payload'ы токенов совпадают.
-// case: не выдать новый токен:
-//   > access токен, который прислал пользователь, не просрочен.
-//   > refresh токен в базе пустой.
-//   > refresh токен в базе не пустой, но просрочен.
-//   > payload'ы токенов не совпадают.
+
+func (u *User) SignOutFromAccount(inputViewModel *mapper.IsAuthorizedViewModel, db repository.UserRepository, ctx context.Context) error {
+	if err := inputViewModel.Validator(); err != nil {
+		return err
+	}
+	accessPayload, err := u.tokenIsExpire(inputViewModel.Access)
+	if err != nil {
+		return mapper.ErrorNonValidAccessToken
+	}
+	userEntity, err := u.userFromPayload(accessPayload, db, ctx)
+	if err != nil {
+		go log.Println(runtimeinfo.Runtime(1), "; ERROR=[user not found", err, "]")
+		return mapper.ErrorNonExistUser
+	}
+	if strings.TrimSpace(userEntity.RefreshToken) == "" {
+		go log.Println(runtimeinfo.Runtime(1), "; ERROR=[user refresh token is empty]")
+		return mapper.ErrorNonValidRefreshToken
+	}
+	if err := u.updateRefreshToken(userEntity, nil, db, ctx); err != nil {
+		go log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
+		return mapper.ErrorBadDataOperation
+	}
+	return nil
+}
+
+
 func (u *User) UpdateAccessToken(inputViewModel *mapper.NewAccessTokenViewModel, db repository.UserRepository, ctx context.Context) (string, *mapper.UserViewModel, error) {
 	if err := inputViewModel.Validator(); err != nil {
 		return "", nil, err
@@ -190,29 +186,10 @@ func (u *User) Update(inputViewModel *mapper.UpdateUserViewModel, db repository.
 	response.AccessToken = inputViewModel.AccessToken
 	//
 	parseUserEntity := inputViewModel.Mapper()
-	findUserEntity, err := db.GetByID(parseUserEntity.UserID, ctx)
+	_, err := db.GetByID(parseUserEntity.UserID, ctx)
 	if err != nil {
 		go log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 		return nil, mapper.ErrorNonExistUser
-	}
-	//
-	if strings.TrimSpace(parseUserEntity.Name) != "" || strings.TrimSpace(parseUserEntity.Telephone) != "" {
-		var(
-			n, t = strings.TrimSpace(parseUserEntity.Name), strings.TrimSpace(parseUserEntity.Telephone)
-		)
-		if n != "" && t == "" {
-			parseUserEntity.Telephone = findUserEntity.Telephone
-		}
-		if n == "" && t != "" {
-			parseUserEntity.Name = findUserEntity.Name
-		}
-		access, refresh, err := u.createAuthorizationTokens(parseUserEntity)
-		if err != nil {
-			go log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
-			return nil, mapper.ErrorBadDataOperation
-		}
-		parseUserEntity.RefreshToken = refresh
-		response.AccessToken = access
 	}
 	//
 	err = db.EntityUpdate(parseUserEntity, ctx)
@@ -225,6 +202,17 @@ func (u *User) Update(inputViewModel *mapper.UpdateUserViewModel, db repository.
 	if err != nil {
 		go log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 		return nil, mapper.ErrorNonExistUser
+	}
+	//
+	access, refresh, err := u.createAuthorizationTokens(updateUserEntity)
+	if err != nil {
+		go log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
+		return nil, mapper.ErrorBadDataOperation
+	}
+	response.AccessToken = access
+	if err := u.updateRefreshToken(updateUserEntity, refresh, db, ctx); err != nil {
+		go log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
+		return nil, mapper.ErrorBadDataOperation
 	}
 	return response.Mapper(updateUserEntity), nil
 }

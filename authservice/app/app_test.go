@@ -62,7 +62,7 @@ func initFields() {
 	testUserService = service.NewUserService(
 		[]byte("auth_service"),
 		5*time.Second,
-		30*time.Hour,
+		8*time.Second,
 		30*time.Minute,
 	)
 	testApplication = newTestApp(
@@ -182,7 +182,7 @@ func TestAuthorizedFlow(t *testing.T) {
 	//
 	//
 	authUser := &mapper.AuthorizationUserViewModel{
-		UserID:    74,
+		UserID:    86,
 		Telephone: "8-000-000-0000",
 		Password:  "test",
 		Email:     "test@mail.ru",
@@ -286,6 +286,54 @@ func TestAuthorizedFlow(t *testing.T) {
 	log.Println(res.Status)
 	log.Println(*viewModel.User)
 	log.Println(viewModel.Token)
+	time.Sleep(6*time.Second)
+	//
+	//
+	//
+	res, err = getToken(
+		srv,
+		"/api/user/access",
+		accessToken,
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if res.StatusCode == http.StatusOK {
+		t.Fatal("status is OK")
+	}
+	//
+	//
+	//
+	log.Println(res.Status)
+	//
+	//
+	//
+	res, err = getToken(
+		srv,
+		"/api/user/access/update",
+		accessToken,
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if res.StatusCode == http.StatusOK {
+		t.Fatal("status is OK")
+	}
+	body, err = ioutil.ReadAll(res.Body)
+	if err != nil {
+		t.Fatal(err)
+	}
+	errViewModel = new(errorResponseViewModel)
+	err = json.Unmarshal(body, viewModel)
+	_ = res.Body.Close()
+	if err != nil {
+		t.Fatal(err)
+	}
+	//
+	//
+	//
+	log.Println(res.Status)
+	log.Println(*errViewModel)
 	//
 	//
 	//
