@@ -369,7 +369,7 @@ Status: 200.
 
 REQUEST:
 
-POST: /api/user/password/token
+GET: /api/user/password/token
 
 HEADER:
 
@@ -377,20 +377,11 @@ HEADER:
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImZpcnN0IjoiOC05NTMtOTgzLTA4MDciLCJzZWNvbmQiOiLQktC70LDQtCDQmtGD0LfQvdC10YbQvtCyIn0sImV4cCI6MTYwNzg4MjA2OH0.t9LWRayZbrBvO4WL_u9se3KJthYH9Y6Ns_HtpLp3C8I
 ```
 
-Body: raw
-
-```json
-{
-    "telephone": "8-953-983-0807",
-    "email": "vladislav.kuznetsovRTN1@yandex.ru"
-}
-```
-
 RESPONSE:
 
 Status: 200, 30-минутный токен отправлен на почту.
 
-Dsgjkybnm товен сброса:
+Выполнить сброс пароля с помощью полученного токена:
 
 REQUEST:
 
@@ -407,8 +398,6 @@ Body: raw
 ```json
 {
     "reset_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImZpcnN0IjoiT0MwNU5UTXRPVGd6TFRBNE1EYz0iLCJzZWNvbmQiOiJ0b3N0ZXIxMjMifSwiZXhwIjoxNjA3ODgzMTA2fQ.w-5ZxVQlTwnI2VQNG94hNODusfkM8ecxcX8tY7gRWXc",
-    "telephone" : "8-953-983-0807",
-    "email" : "walkmanmail19@gmail.com",
     "password" :"toster12345"
 }
 ```

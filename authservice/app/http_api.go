@@ -41,7 +41,7 @@ func (a *apiHttpHandler) getServer() (*gin.Engine, func()) {
 
 		passReset := api.Group("/password", a.middlewareAccessToken)
 		{
-			passReset.POST("/token", a.getResetPasswordToken)
+			passReset.GET("/token", a.getResetPasswordToken)
 			passReset.POST("/reset", a.resetPassword)
 		}
 
@@ -242,7 +242,7 @@ func (a *apiHttpHandler) updateAccessToken(ctx *gin.Context) {
 
 func (a *apiHttpHandler) getResetPasswordToken(ctx *gin.Context) {
 	token := ctx.MustGet("authorization").(string)
-	_, err := application.userService.IsAuthorized(
+	user, err := application.userService.IsAuthorized(
 		&mapper.IsAuthorizedViewModel{Access: token},
 		application.userPostgresRepository,
 		nil,
@@ -256,14 +256,8 @@ func (a *apiHttpHandler) getResetPasswordToken(ctx *gin.Context) {
 		return
 	}
 	viewModel := new(mapper.ResetPasswordViewModel)
-	if err := ctx.BindJSON(viewModel); err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, struct {
-			Error string `json:"error"`
-		}{
-			Error: mapper.ErrorNonValidData.Error(),
-		})
-		return
-	}
+	viewModel.Telephone = user.Telephone
+	viewModel.Email = user.Email
 	resetToken, err := application.userService.GetResetPasswordToken(
 		viewModel,
 		application.userPostgresRepository,
@@ -283,7 +277,7 @@ func (a *apiHttpHandler) getResetPasswordToken(ctx *gin.Context) {
 
 func (a *apiHttpHandler) resetPassword(ctx *gin.Context) {
 	token := ctx.MustGet("authorization").(string)
-	_, err := application.userService.IsAuthorized(
+	user, err := application.userService.IsAuthorized(
 		&mapper.IsAuthorizedViewModel{Access: token},
 		application.userPostgresRepository,
 		nil,
@@ -305,6 +299,8 @@ func (a *apiHttpHandler) resetPassword(ctx *gin.Context) {
 		})
 		return
 	}
+	viewModel.Email = user.Email
+	viewModel.Telephone = user.Telephone
 	access, _, err := application.userService.ResetPassword(
 		viewModel,
 		application.userPostgresRepository,
