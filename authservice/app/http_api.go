@@ -301,7 +301,7 @@ func (a *apiHttpHandler) resetPassword(ctx *gin.Context) {
 	}
 	viewModel.Email = user.Email
 	viewModel.Telephone = user.Telephone
-	access, _, err := application.userService.ResetPassword(
+	response, err := application.userService.ResetPassword(
 		viewModel,
 		application.userPostgresRepository,
 		nil,
@@ -315,11 +315,7 @@ func (a *apiHttpHandler) resetPassword(ctx *gin.Context) {
 		return
 	}
 	go applicationHttpRequests.mailerResetPassword(viewModel.Email)
-	ctx.AbortWithStatusJSON(http.StatusOK, &struct {
-		Token string `json:"token"`
-	}{
-		Token: access,
-	})
+	ctx.AbortWithStatusJSON(http.StatusOK, response)
 }
 
 func (a *apiHttpHandler) update(ctx *gin.Context) {

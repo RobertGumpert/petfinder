@@ -21,6 +21,7 @@ type DialogUserRepository interface {
 	createDialogUser(dialogEntity *entity.DialogUserEntity, ctx context.Context) (uint64, error)
 	getListByUser(userId uint64, ctx context.Context) ([]entity.DialogUserEntity, error)
 	updateByUser(userId uint64, status mapper.DialogUserStatus, ctx context.Context)
+	updateByIDs(ids []uint64, fields map[string]interface{}, ctx context.Context) error
 }
 
 type DialogRepositoryAPI interface {

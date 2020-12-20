@@ -264,39 +264,39 @@ func (u *User) GetResetPasswordToken(inputViewModel *mapper.ResetPasswordViewMod
 	return token, nil
 }
 
-func (u *User) ResetPassword(inputViewModel *mapper.ResetPasswordViewModel, db repository.UserRepository, ctx context.Context) (access, refresh string, err error) {
+func (u *User) ResetPassword(inputViewModel *mapper.ResetPasswordViewModel, db repository.UserRepository, ctx context.Context) (*mapper.UserViewModel, error) {
 	if err := inputViewModel.Validator(true); err != nil {
-		return "", "", err
+		return nil, err
 	}
 	tokenPayload, err := u.jwtToken.Decode(inputViewModel.ResetToken)
 	if err != nil {
 		go log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
-		return "", "", mapper.ErrorNonValidData
+		return nil, mapper.ErrorNonValidData
 	}
 	telephone, err := base64.StdEncoding.DecodeString(tokenPayload.FieldFirst)
 	if err != nil {
 		go log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
-		return "", "", mapper.ErrorNonValidData
+		return nil, mapper.ErrorNonValidData
 	}
 	userEntity, err := db.EntityGet(&entity.User{
 		Telephone: string(telephone),
 	}, ctx)
 	if err != nil {
 		go log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
-		return "", "", mapper.ErrorNonExistUser
+		return nil, mapper.ErrorNonExistUser
 	}
 	if userEntity.Password != tokenPayload.FieldSecond {
 		go log.Println(runtimeinfo.Runtime(1), "; ERROR=[user password not equal password from token]")
-		return "", "", mapper.ErrorRetryingPasswordChange
+		return nil, mapper.ErrorRetryingPasswordChange
 	}
 	if userEntity.Password == inputViewModel.Password {
 		go log.Println(runtimeinfo.Runtime(1), "; ERROR=[user password equal password from inputViewModel]")
-		return "", "", mapper.ErrorRetryingPasswordChange
+		return nil, mapper.ErrorRetryingPasswordChange
 	}
-	access, refresh, err = u.createAuthorizationTokens(userEntity)
+	access, refresh, err := u.createAuthorizationTokens(userEntity)
 	if err != nil {
 		go log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
-		return "", "", mapper.ErrorNonValidData
+		return nil, mapper.ErrorNonValidData
 	}
 	err = db.MapUpdate(userEntity.UserID, map[string]interface{}{
 		"password":      inputViewModel.Password,
@@ -304,9 +304,12 @@ func (u *User) ResetPassword(inputViewModel *mapper.ResetPasswordViewModel, db r
 	}, ctx)
 	if err != nil {
 		go log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
-		return "", "", mapper.ErrorBadDataOperation
+		return nil, mapper.ErrorBadDataOperation
 	}
-	return access, refresh, nil
+	response := new(mapper.UserViewModel)
+	response.Mapper(userEntity)
+	response.AccessToken = access
+	return response, nil
 }
 
 func (u *User) createAuthorizationTokens(user *entity.User) (access, refresh string, err error) {

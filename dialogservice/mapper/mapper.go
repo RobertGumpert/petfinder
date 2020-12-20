@@ -6,6 +6,25 @@ import (
 	"time"
 )
 
+type UpdateUserNameViewModel struct {
+	UserID uint64 `json:"user_id"`
+	Name   string `json:"name"`
+}
+
+func (m *UpdateUserNameViewModel) Validator() error {
+	if m.UserID == 0 {
+		return ErrorNonValidData
+	}
+	if strings.TrimSpace(m.Name) == "" {
+		return ErrorNonValidData
+	}
+	return nil
+}
+
+//
+//----------------------------------------------------------------------------------------------------------------------
+//
+
 type UserViewModel struct {
 	UserID    uint64 `json:"user_id"`
 	Telephone string `json:"telephone"`

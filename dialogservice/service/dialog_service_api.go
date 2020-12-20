@@ -88,3 +88,14 @@ func (s *DialogServiceAPI) AddNewMessage(viewModel *mapper.AddNewMessageViewMode
 	}
 	return new(mapper.AddNewMessageResponse).Mapper(messageEntity), nil
 }
+
+func (s *DialogServiceAPI) UpdateUserName(viewModel *mapper.UpdateUserNameViewModel, db repository.DialogRepositoryAPI, ctx context.Context) error {
+	if err := viewModel.Validator(); err != nil {
+		return err
+	}
+	return db.UpdateUserName(
+		viewModel.UserID,
+		viewModel.Name,
+		ctx,
+	)
+}

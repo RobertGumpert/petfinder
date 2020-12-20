@@ -35,6 +35,13 @@ func (a *apiHttpHandler) getServer() (*gin.Engine, func()) {
 			messages.POST("/batching/next", a.downloadNextMessagesBatch)
 		}
 	}
+	event := engine.Group("/event")
+	{
+		userEvents := event.Group("/user")
+		{
+			userEvents.POST("/update/name", a.updateUser)
+		}
+	}
 	return engine, func() {
 		err := engine.Run(port)
 		if err != nil {
@@ -180,4 +187,29 @@ func (a *apiHttpHandler) addNewMessage(ctx *gin.Context) {
 	}
 	ctx.AbortWithStatusJSON(http.StatusOK, response)
 	return
+}
+
+func (a *apiHttpHandler) updateUser(ctx *gin.Context) {
+	viewModel := new(mapper.UpdateUserNameViewModel)
+	if err := ctx.BindJSON(viewModel); err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, struct {
+			Error string `json:"error"`
+		}{
+			Error: mapper.ErrorNonValidData.Error(),
+		})
+		return
+	}
+	if err := application.dialogServiceAPI.UpdateUserName(
+		viewModel,
+		application.dialogAPIPostgresRepository,
+		nil,
+	); err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, struct {
+			Error string `json:"error"`
+		}{
+			Error: mapper.ErrorNonValidData.Error(),
+		})
+		return
+	}
+	ctx.AbortWithStatus(http.StatusOK)
 }

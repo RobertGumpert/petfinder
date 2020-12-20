@@ -90,6 +90,20 @@ func (d *GormDialogRepositoryAPI) getDialog(dialogId uint64, ctx context.Context
 	return &entity.DialogEntity{}, nil
 }
 
+func (d *GormDialogRepositoryAPI) updateByIDs(ids []uint64, fields map[string]interface{}, ctx context.Context) error {
+	tx := d.DB.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+	if err := tx.Model(&entity.DialogEntity{}).Where("ad_id IN ? ", ids).Updates(fields).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+	return tx.Commit().Error
+}
+
 //
 // API
 //
@@ -145,7 +159,17 @@ func (d *GormDialogRepositoryAPI) AddNewMessage(message *entity.MessageEntity, c
 }
 
 func (d *GormDialogRepositoryAPI) UpdateUserName(userId uint64, userName string, ctx context.Context) error {
-	return nil
+	dialogsUser, err := d.getListByUser(userId, ctx)
+	if err != nil {
+		return err
+	}
+	ids := make([]uint64, 0)
+	for _, userDialog := range dialogsUser {
+		ids = append(ids, userDialog.DialogUserID)
+	}
+	return d.updateByIDs(ids, map[string]interface{}{
+		"user_name": userName,
+	}, ctx)
 }
 
 func (d *GormDialogRepositoryAPI) DownloadDialogs(userId uint64, ctx context.Context) ([]entity.MessageEntity, []entity.DialogEntity, []entity.DialogUserEntity, uint64, error) {
