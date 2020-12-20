@@ -145,29 +145,28 @@ func (a *apiHttpHandler) addAdvert(ctx *gin.Context) {
 	}, "")
 	file, fileHeader, err := ctx.Request.FormFile("file")
 	if err == nil {
-		_, downloadUrl, err = applicationHttpRequests.saveImage(response.AdID, file, fileHeader)
+		_, createDownloadUrl, err := applicationHttpRequests.saveImage(response.AdID, file, fileHeader)
 		if err != nil {
-			log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
-			ctx.AbortWithStatus(http.StatusNotFound)
-			return
+			go log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
+		}
+		if strings.TrimSpace(createDownloadUrl) != "" {
+			downloadUrl = createDownloadUrl
 		}
 	}
-	if strings.TrimSpace(downloadUrl) != "" {
-		if err := application.advertService.UpdateImage(
-			&mapper.UpdateImageViewModel{AdID: response.AdID, ImageUrl: downloadUrl},
-			application.advertPostgresRepository,
-			nil,
-		); err != nil {
-			log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
-			ctx.AbortWithStatusJSON(http.StatusBadRequest, struct {
-				Error string `json:"error"`
-			}{
-				Error: err.Error(),
-			})
-			return
-		}
-		response.ImageUrl = downloadUrl
+	if err := application.advertService.UpdateImage(
+		&mapper.UpdateImageViewModel{AdID: response.AdID, ImageUrl: downloadUrl},
+		application.advertPostgresRepository,
+		nil,
+	); err != nil {
+		log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, struct {
+			Error string `json:"error"`
+		}{
+			Error: err.Error(),
+		})
+		return
 	}
+	response.ImageUrl = downloadUrl
 	ctx.AbortWithStatusJSON(http.StatusOK, response)
 }
 

@@ -182,7 +182,7 @@ func downloadFile64(context *gin.Context, fileGroup groupFiles) (*ListFile64View
 }
 
 func uploadFileFormData(context *gin.Context, fileGroup groupFiles) (*URLViewModel, error) {
-	context.Request.Body = http.MaxBytesReader(context.Writer, context.Request.Body, 2<<20)
+	context.Request.Body = http.MaxBytesReader(context.Writer, context.Request.Body, 6<<20)
 	viewModel := new(UploadViewModel)
 	jsonForm := context.PostForm("json")
 	if jsonForm != "" {
