@@ -199,6 +199,9 @@ func (d *GormDialogRepositoryAPI) DownloadDialogs(userId uint64, ctx context.Con
 				log.Println(runtimeinfo.Runtime(1), "; ERROR=[", err, "]")
 				return
 			}
+			for i, j := 0, len(dialogMessages)-1; i < j; i, j = i+1, j-1 {
+				dialogMessages[i], dialogMessages[j] = dialogMessages[j], dialogMessages[i]
+			}
 			messages = append(messages, dialogMessages...)
 		}(&wg, dialogId)
 	}
@@ -213,6 +216,9 @@ func (d *GormDialogRepositoryAPI) DownloadNextMessagesBatch(dialogId uint64, las
 	)
 	if err := d.Where("foreign_dialog_id = ?", dialogId).Order("date_create desc").Offset(int(nextSkip)).Limit(mapper.BatchSizeMessages).Find(&messages).Error; err != nil {
 		return nil, nextSkip, err
+	}
+	for i, j := 0, len(messages)-1; i < j; i, j = i+1, j-1 {
+		messages[i], messages[j] = messages[j], messages[i]
 	}
 	return messages, nextSkip, nil
 }
