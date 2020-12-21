@@ -1,2 +1,2 @@
-advert_service: "127.0.0.1:5491"
-dialog_service: "127.0.0.1:5492"
+advert_service: "127.0.0.1:5492"
+dialog_service: "127.0.0.1:5493"
